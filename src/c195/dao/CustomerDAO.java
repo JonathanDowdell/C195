@@ -1,11 +1,9 @@
 package c195.dao;
 
 import c195.model.Customer;
-import c195.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,6 +20,7 @@ public class CustomerDAO {
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
             while (resultSet.next()) {
                 Customer customer = new Customer();
+                long customerID = resultSet.getLong("Customer_ID");
                 String name = resultSet.getString("Customer_Name");
                 String address = resultSet.getString("Address");
                 String postalCode = resultSet.getString("Postal_Code");
@@ -33,6 +32,7 @@ public class CustomerDAO {
                 String lastUpdatedBy = resultSet.getString("Last_Updated_By");
                 LocalDateTime lateUpdate = LocalDateTime.parse(lastUpdateString, formatter);
 
+                customer.setCustomerID(customerID);
                 customer.setCustomerName(name);
                 customer.setAddress(address);
                 customer.setPostalCode(postalCode);

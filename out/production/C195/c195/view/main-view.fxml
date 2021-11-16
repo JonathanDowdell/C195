@@ -21,7 +21,7 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <TableView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="customerTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <columns>
                         <TableColumn fx:id="customerIDColumn" prefWidth="75.0" text="ID" />
                         <TableColumn fx:id="customerNameColumn" prefWidth="75.0" text="Name" />

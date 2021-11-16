@@ -1,6 +1,7 @@
 package c195.controller;
 
 import c195.dao.CustomerDAO;
+import c195.dao.UserDAO;
 import c195.model.Appointment;
 import c195.model.Customer;
 import javafx.collections.ObservableList;
@@ -8,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -68,8 +71,14 @@ public class MainViewController implements Initializable {
     @FXML
     public Button deleteAppointmentButton;
 
+    @FXML
+    public TableView<Customer> customerTable;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        CustomerDAO.getAllCustomers();
+        customerTable.setItems(CustomerDAO.getAllCustomers());
+        customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
     }
 }
