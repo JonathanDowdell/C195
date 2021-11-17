@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:controller="c195.controller.MainViewController" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="647.0" prefHeight="633.0" prefWidth="1161.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="647.0" prefHeight="633.0" prefWidth="1161.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195.controller.MainViewController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="ALWAYS">
          <children>
@@ -23,13 +23,16 @@
                   </Label>
                   <TableView fx:id="customerTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="customerIDColumn" prefWidth="75.0" text="ID" />
-                        <TableColumn fx:id="customerNameColumn" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="customerIDColumn" prefWidth="54.0" text="ID" />
+                        <TableColumn fx:id="customerNameColumn" prefWidth="132.0" text="Name" />
                      </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
                      <children>
-                        <Button fx:id="addCustomerButton" minWidth="56.0" mnemonicParsing="false" text="Add" />
+                        <Button fx:id="addCustomerButton" onAction="#addCustomerAction" minWidth="56.0" mnemonicParsing="false" text="Add" />
                         <Button fx:id="modifyCustomerButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Modify" />
                         <Button fx:id="deleteContactButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Delete" />
                      </children>
@@ -53,19 +56,22 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <TableView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="appointmentTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="appointmentIDColumn" prefWidth="75.0" text="ID" />
                       <TableColumn fx:id="appointmentTitleColumn" prefWidth="75.0" text="Title" />
                         <TableColumn fx:id="appointmentDescColumn" prefWidth="75.0" text="Description" />
                         <TableColumn fx:id="appointmentLocationColumn" prefWidth="75.0" text="Location" />
-                        <TableColumn fx:id="appointmentContactColumn" prefWidth="75.0" text="Contact" />
+                        <TableColumn fx:id="appointmentContactColumn" prefWidth="75.0" text="Contact ID" />
                         <TableColumn fx:id="appointmentTypeColumn" prefWidth="75.0" text="Type" />
                         <TableColumn fx:id="appointmentStartColumn" prefWidth="75.0" text="Start" />
                         <TableColumn fx:id="appointmentEndColumn" prefWidth="75.0" text="End" />
                         <TableColumn fx:id="appointmentCustomerIDColumn" prefWidth="75.0" text="Customer ID" />
                         <TableColumn fx:id="appointmentUserIDColumn" prefWidth="75.0" text="User ID" />
                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
                      <children>

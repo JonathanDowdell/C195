@@ -4,6 +4,7 @@ package c195.controller;
 import c195.Main;
 import c195.dao.UserDAO;
 import c195.util.Logger;
+import c195.util.Navigation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,12 +65,7 @@ public class LoginViewController implements Initializable {
         Logger.log(userID, validUser, "Login Attempt");
         if (validUser) {
             System.out.println("Logged In");
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/main-view.fxml"));
-            Parent parent = fxmlLoader.load();
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            Navigation.mainView(event);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(alertTitle);

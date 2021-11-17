@@ -71,4 +71,9 @@ public class Country {
     public int hashCode() {
         return Objects.hash(countryID, country, createDate, createBy, lastUpdate, lastUpdatedBy);
     }
+
+    @Override
+    public String toString() {
+        return country;
+    }
 }

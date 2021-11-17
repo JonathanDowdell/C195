@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="367.0" spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="367.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195.controller.CustomerViewController">
    <children>
       <Label fx:id="titleLabel" text="Manage Customer">
          <font>
@@ -23,19 +23,19 @@
             <Insets bottom="10.0" />
          </padding>
       </Label>
-      <TextField fx:id="idTextField" layoutX="40.0" layoutY="232.0" prefHeight="32.0" promptText="Auto Generated ID" />
+      <TextField fx:id="idTextField" disable="true" editable="false" layoutX="40.0" layoutY="232.0" prefHeight="32.0" promptText="Auto Generated ID" />
       <TextField fx:id="nameTextField" prefHeight="32.0" promptText="Name" />
       <TextField fx:id="addressTextField" layoutX="40.0" layoutY="219.0" prefHeight="32.0" promptText="Address" />
       <HBox alignment="CENTER" minHeight="32.0" prefHeight="32.0" prefWidth="288.0" spacing="10.0">
          <children>
-            <AnchorPane prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ComboBox fx:id="cityComboField" layoutX="8.0" layoutY="1.0" prefHeight="32.0" prefWidth="150.0" promptText="City" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
             <AnchorPane layoutX="151.0" layoutY="10.0" prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
                   <ComboBox fx:id="countryComboField" prefHeight="32.0" prefWidth="150.0" promptText="Country" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <ComboBox fx:id="cityComboField" layoutX="8.0" layoutY="1.0" prefHeight="32.0" prefWidth="150.0" promptText="City" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
