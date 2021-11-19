@@ -6,6 +6,7 @@ import c195.model.Appointment;
 import c195.model.Customer;
 import c195.util.NavigationHelper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +29,9 @@ public class MainViewController implements Initializable {
 
     @FXML
     public TableColumn<Customer, String> customerNameColumn;
+
+    @FXML
+    public TableColumn<Customer, Long> customerDivisionIDColumn;
 
     @FXML
     public Button addCustomerButton;
@@ -180,6 +184,7 @@ public class MainViewController implements Initializable {
         customerTable.setItems(customers);
         customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerDivisionIDColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getDivisionID()));
     }
 
 }
