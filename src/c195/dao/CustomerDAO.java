@@ -1,6 +1,7 @@
 package c195.dao;
 
 import c195.model.Customer;
+import c195.model.FirstLevelDivision;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,6 +15,53 @@ import java.time.format.DateTimeFormatter;
 public class CustomerDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    public static boolean addCustomer(Customer customer) {
+        String customerCreateQuery = """
+                INSERT INTO customers (
+                Customer_Name,Address,Postal_Code,Phone,Create_Date,
+                Created_By,Last_Update,Last_Updated_By,Division_ID) VALUES (
+                ?,?,?,?,now(),?,now(),?, ?);""";
+
+        try {
+            PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerCreateQuery);
+            statement.setString(1, customer.getCustomerName());
+            statement.setString(2, customer.getAddress());
+            statement.setString(3, customer.getPostalCode());
+            statement.setString(4, customer.getPhone());
+            statement.setString(5, customer.getLastUpdatedBy());
+            statement.setString(6, UserDAO.getCurrentUser().getUsername());
+            statement.setLong(7, customer.getDivision().getDivisionID());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean updateCustomer(Customer customer) {
+        String customerUpdateQuery = """
+        UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?,
+        Last_Update=now(), Last_Updated_By=?, Division_ID=?
+        WHERE Customer_ID=?
+        """;
+
+        try {
+            PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerUpdateQuery);
+            statement.setString(1, customer.getCustomerName());
+            statement.setString(2, customer.getAddress());
+            statement.setString(3, customer.getPostalCode());
+            statement.setString(4, customer.getPhone());
+            statement.setString(5, customer.getLastUpdatedBy());
+            statement.setLong(6, customer.getDivision().getDivisionID());
+            statement.setLong(7, customer.getCustomerID());
+            int executionResults = statement.executeUpdate();
+            return executionResults == 1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
 
     public static Customer getCustomer(long customerID) {
         String getCustomerQuery = "SELECT * FROM customers WHERE Customer_ID = ?";
@@ -48,41 +96,69 @@ public class CustomerDAO {
         return fetchedCustomer;
     }
 
+    public static boolean removeCustomer(Customer customer) {
+        String deletionQuery = """
+                DELETE FROM customers WHERE Customer_ID = ?
+                """;
+        try {
+            PreparedStatement statement = SQLDBService.getConnection().prepareStatement(deletionQuery);
+            statement.setLong(1, customer.getCustomerID());
+            return statement.executeUpdate() == 1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
+
     public static ObservableList<Customer> getAllCustomers() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
-        String getAllUsersQuery = "SELECT * FROM customers";
+        String getAllUsersQuery = """
+                SELECT * FROM customers AS cus
+                JOIN first_level_divisions AS fld
+                ON cus.Division_ID = fld.Division_ID
+                JOIN countries AS ctry
+                ON ctry.Country_ID = fld.Country_ID
+                """;
         try (Statement statement = SQLDBService.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
             while (resultSet.next()) {
-                Customer customer = new Customer();
-                long customerID = resultSet.getLong("Customer_ID");
-                String name = resultSet.getString("Customer_Name");
-                String address = resultSet.getString("Address");
-                String postalCode = resultSet.getString("Postal_Code");
-                String phone = resultSet.getString("Phone");
-                String createDateString = resultSet.getString("Create_Date");
-                String createdBy = resultSet.getString("Created_By");
-                LocalDateTime createDate = LocalDateTime.parse(createDateString, formatter);
-                String lastUpdateString = resultSet.getString("Last_Update");
-                String lastUpdatedBy = resultSet.getString("Last_Updated_By");
-                LocalDateTime lateUpdate = LocalDateTime.parse(lastUpdateString, formatter);
-
-                customer.setCustomerID(customerID);
-                customer.setCustomerName(name);
-                customer.setAddress(address);
-                customer.setPostalCode(postalCode);
-                customer.setPhone(phone);
-                customer.setCreateDate(createDate);
-                customer.setCreatedBy(createdBy);
-                customer.setLastUpdate(lateUpdate);
-                customer.setCreatedBy(lastUpdatedBy);
-
+                Customer customer = pullCustomerFromResultSet(resultSet);
                 customers.add(customer);
+
+                FirstLevelDivision firstLevelDivision = FirstLevelDivisionDAO.pullDivisionFromResultSet(resultSet);
+                customer.setDivision(firstLevelDivision);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
         return customers;
+    }
+
+    public static Customer pullCustomerFromResultSet(ResultSet resultSet) throws SQLException {
+        Customer customer = new Customer();
+        long customerID = resultSet.getLong("Customer_ID");
+        String name = resultSet.getString("Customer_Name");
+        String address = resultSet.getString("Address");
+        String postalCode = resultSet.getString("Postal_Code");
+        String phone = resultSet.getString("Phone");
+        String createDateString = resultSet.getString("Create_Date");
+        String createdBy = resultSet.getString("Created_By");
+        LocalDateTime createDate = LocalDateTime.parse(createDateString, formatter);
+        String lastUpdateString = resultSet.getString("Last_Update");
+        String lastUpdatedBy = resultSet.getString("Last_Updated_By");
+        LocalDateTime lateUpdate = LocalDateTime.parse(lastUpdateString, formatter);
+
+        customer.setCustomerID(customerID);
+        customer.setCustomerName(name);
+        customer.setAddress(address);
+        customer.setPostalCode(postalCode);
+        customer.setPhone(phone);
+        customer.setCreateDate(createDate);
+        customer.setCreatedBy(createdBy);
+        customer.setLastUpdate(lateUpdate);
+        customer.setCreatedBy(lastUpdatedBy);
+
+        return customer;
     }
 }

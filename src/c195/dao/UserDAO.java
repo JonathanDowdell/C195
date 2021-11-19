@@ -22,7 +22,7 @@ public class UserDAO {
 
     public static User getUser(long userID) {
         String getUserQuery = "SELECT * FROM users WHERE User_ID = ?";
-        User fetchedUser = new User();
+        User user = new User();
 
         try {
             PreparedStatement statement = SQLDBService.getConnection().prepareStatement(getUserQuery);
@@ -30,17 +30,17 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                fetchedUser.setUserID(userID);
-                fetchedUser.setUsername(resultSet.getString("User_Name"));
-                fetchedUser.setPassword(resultSet.getString("Password"));
+                user.setUserID(userID);
+                user.setUsername(resultSet.getString("User_Name"));
+                user.setPassword(resultSet.getString("Password"));
                 String createDateString = resultSet.getString("Create_Date");
                 LocalDateTime createDate = LocalDateTime.parse(createDateString, formatter);
-                fetchedUser.setCreateDate(createDate);
-                fetchedUser.setCreatedBy(resultSet.getString("Created_By"));
+                user.setCreateDate(createDate);
+                user.setCreatedBy(resultSet.getString("Created_By"));
                 String lastUpdateString = resultSet.getString("Last_Update");
                 LocalDateTime lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
-                fetchedUser.setLastUpdated(lastUpdate);
-                fetchedUser.setLastUpdatedBy(resultSet.getString("Last_Updated_By"));
+                user.setLastUpdated(lastUpdate);
+                user.setLastUpdatedBy(resultSet.getString("Last_Updated_By"));
 
             } else {
                 return null;
@@ -49,7 +49,7 @@ public class UserDAO {
             throwables.printStackTrace();
         }
 
-        return fetchedUser;
+        return user;
     }
 
     public static ObservableList<User> getAllUsers() {
@@ -72,6 +72,21 @@ public class UserDAO {
         }
 
         return users;
+    }
+
+    public static User pullUserFromResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setUsername(resultSet.getString("User_Name"));
+        user.setPassword(resultSet.getString("Password"));
+        String createDateString = resultSet.getString("Create_Date");
+        LocalDateTime createDate = LocalDateTime.parse(createDateString, formatter);
+        user.setCreateDate(createDate);
+        user.setCreatedBy(resultSet.getString("Created_By"));
+        String lastUpdateString = resultSet.getString("Last_Update");
+        LocalDateTime lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
+        user.setLastUpdated(lastUpdate);
+        user.setLastUpdatedBy(resultSet.getString("Last_Updated_By"));
+        return user;
     }
 
     // TODO: Login Attempt

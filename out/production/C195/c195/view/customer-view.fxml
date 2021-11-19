@@ -35,7 +35,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ComboBox fx:id="cityComboField" layoutX="8.0" layoutY="1.0" prefHeight="32.0" prefWidth="150.0" promptText="City" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ComboBox fx:id="stateProvinceComboField" layoutX="8.0" layoutY="1.0" prefHeight="32.0" prefWidth="150.0" promptText="State / Province" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
@@ -48,12 +48,12 @@
       </HBox>
       <HBox alignment="CENTER" layoutX="40.0" layoutY="305.0" prefHeight="27.0" prefWidth="288.0" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" text="Save">
+            <Button onAction="#saveCustomerAction" mnemonicParsing="false" text="Save">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button layoutX="131.0" layoutY="11.0" mnemonicParsing="false" text="Cancel">
+            <Button onAction="#cancelAction" layoutX="131.0" layoutY="11.0" mnemonicParsing="false" text="Cancel">
                <font>
                   <Font size="15.0" />
                </font>

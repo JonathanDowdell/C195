@@ -80,4 +80,9 @@ public class FirstLevelDivision {
     public int hashCode() {
         return Objects.hash(divisionID, division, createDate, createdByDate, lastUpdate, lastUpdatedBy, country);
     }
+
+    @Override
+    public String toString() {
+        return division;
+    }
 }

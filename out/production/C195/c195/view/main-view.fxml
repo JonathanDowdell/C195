@@ -33,8 +33,8 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
                      <children>
                         <Button fx:id="addCustomerButton" onAction="#addCustomerAction" minWidth="56.0" mnemonicParsing="false" text="Add" />
-                        <Button fx:id="modifyCustomerButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Modify" />
-                        <Button fx:id="deleteContactButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="modifyCustomerButton" onAction="#updateCustomerAction" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Modify" />
+                        <Button fx:id="deleteCustomerButton" onAction="#deleteCustomerAction" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Delete" />
                      </children>
                   </HBox>
                </children>
