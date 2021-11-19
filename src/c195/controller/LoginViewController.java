@@ -23,13 +23,7 @@ public class LoginViewController implements Initializable {
     public TextField userIDTextField;
 
     @FXML
-    public Label userIDLabel;
-
-    @FXML
     public TextField passwordTextField;
-
-    @FXML
-    public Label passwordLabel;
 
     @FXML
     public AnchorPane root;
@@ -44,8 +38,8 @@ public class LoginViewController implements Initializable {
         resourceBundle = ResourceBundle.getBundle("Languages", locale);
         String username = resourceBundle.getString("username");
         String password = resourceBundle.getString("password");
-        userIDLabel.setText(username);
-        passwordLabel.setText(password);
+//        userIDLabel.setText(username);
+//        passwordLabel.setText(password);
         alertTitle = resourceBundle.getString("alertTitle");
         alertHeader = resourceBundle.getString("alertHeader");
         alertContext = resourceBundle.getString("alertContext");
