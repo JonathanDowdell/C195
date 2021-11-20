@@ -28,6 +28,9 @@ public class LoginViewController implements Initializable {
     @FXML
     public AnchorPane root;
 
+    @FXML
+    public Label zoneIDLabel;
+
     private String alertTitle;
     private String alertHeader;
     private String alertContext;
@@ -38,8 +41,9 @@ public class LoginViewController implements Initializable {
         resourceBundle = ResourceBundle.getBundle("Languages", locale);
         String username = resourceBundle.getString("username");
         String password = resourceBundle.getString("password");
-//        userIDLabel.setText(username);
-//        passwordLabel.setText(password);
+        zoneIDLabel.setText(locale.toString());
+        userIDTextField.setPromptText(username);
+        passwordTextField.setPromptText(password);
         alertTitle = resourceBundle.getString("alertTitle");
         alertHeader = resourceBundle.getString("alertHeader");
         alertContext = resourceBundle.getString("alertContext");

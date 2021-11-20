@@ -107,12 +107,15 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void updateCustomerAction(ActionEvent actionEvent) {
-        try {
-            Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
-            NavigationHelper.customerView(actionEvent, selectedCustomer);
-        } catch (IOException e) {
-            // TODO: 11/17/2021 Handle Error
-            e.printStackTrace();
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer == null) {
+            displayAlert(Alert.AlertType.INFORMATION, "Customer not selected.", "Please select customer.");
+        } else {
+            try {
+                NavigationHelper.customerView(actionEvent, selectedCustomer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

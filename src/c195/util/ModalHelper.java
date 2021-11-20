@@ -17,6 +17,14 @@ public class ModalHelper {
         return alert;
     }
 
+    public static Alert displayAlert(Alert.AlertType alertType, String header, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+        return alert;
+    }
+
     /**
      *
      * @param alertType Type of Alert
