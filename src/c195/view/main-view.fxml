@@ -76,7 +76,7 @@
                   </TableView>
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
                      <children>
-                        <Button fx:id="addAppointmentButton" minWidth="56.0" mnemonicParsing="false" text="Add" />
+                        <Button fx:id="addAppointmentButton" onAction="#addAppointmentAction" minWidth="56.0" mnemonicParsing="false" text="Add" />
                         <Button fx:id="modifyAppointmentButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Modify" />
                         <Button fx:id="deleteAppointmentButton" layoutX="255.0" layoutY="48.0" minWidth="56.0" mnemonicParsing="false" text="Delete" />
                      </children>

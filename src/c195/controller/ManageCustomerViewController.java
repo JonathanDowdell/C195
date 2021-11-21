@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class CustomerViewController implements Initializable {
+public class ManageCustomerViewController implements Initializable {
     public TextField idTextField;
     public TextField nameTextField;
     public TextField addressTextField;

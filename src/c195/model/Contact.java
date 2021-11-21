@@ -43,4 +43,9 @@ public class Contact {
     public int hashCode() {
         return Objects.hash(contactID, contactName, email);
     }
+
+    @Override
+    public String toString() {
+        return contactName;
+    }
 }

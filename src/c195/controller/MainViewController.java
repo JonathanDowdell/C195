@@ -120,7 +120,7 @@ public class MainViewController implements Initializable {
     }
 
     @FXML
-    public void deleteCustomerAction() {
+    private void deleteCustomerAction() {
         try {
             Customer customer = Optional.of(customerTable.getSelectionModel().getSelectedItem())
                     .orElseThrow();
@@ -154,6 +154,16 @@ public class MainViewController implements Initializable {
                     "Product Deletion Error",
                     "The product was NOT deleted.",
                     "Please select a product to delete.");
+        }
+    }
+
+    @FXML
+    public void addAppointmentAction(ActionEvent event) {
+        try {
+            NavigationHelper.manageAppointmentView(event, null);
+        } catch (IOException e) {
+            // TODO: 11/21/2021
+            e.printStackTrace();
         }
     }
 
