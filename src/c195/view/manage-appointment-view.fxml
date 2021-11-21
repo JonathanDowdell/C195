@@ -42,12 +42,17 @@
                 <Separator prefWidth="200.0" />
             <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                <children>
-                  <Label text="Appointment Start Date" textFill="#00000091" />
+                  <Label text="Appointment Date" textFill="#00000091" />
                </children>
             </HBox>
                 <AnchorPane minHeight="32.0" prefHeight="32.0" prefWidth="200.0">
                     <children>
                         <DatePicker fx:id="startDateField" promptText="Start Date" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane layoutX="40.0" layoutY="304.0" minHeight="32.0" prefHeight="32.0" prefWidth="200.0">
+                    <children>
+                        <DatePicker fx:id="endDateField" promptText="End Date" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                     </children>
                 </AnchorPane>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -96,64 +101,10 @@
                   </VBox>
                </children>
             </HBox>
-                <Separator layoutX="40.0" layoutY="304.0" prefWidth="200.0" />
-            <HBox alignment="CENTER" layoutX="40.0" layoutY="317.0">
-               <children>
-                  <Label text="Appointment End Date" textFill="#00000091" />
-               </children>
-            </HBox>
-                <AnchorPane layoutX="40.0" layoutY="304.0" minHeight="32.0" prefHeight="32.0" prefWidth="200.0">
-                    <children>
-                        <DatePicker fx:id="endDateField" promptText="End Date" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                    </children>
-                </AnchorPane>
-            <HBox layoutX="40.0" layoutY="359.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Start Time" textFill="#00000091" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                           <children>
-                              <TextField minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
-                              <Label minHeight="32.0" text=":">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
-                              <ComboBox minHeight="32.0" prefWidth="150.0" promptText="PM">
-                                 <HBox.margin>
-                                    <Insets left="4.0" />
-                                 </HBox.margin>
-                              </ComboBox>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="10.0" spacing="5.0">
-                     <children>
-                        <Label text="End Time" textFill="#00000091" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                           <children>
-                              <TextField minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
-                              <Label minHeight="32.0" text=":">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <TextField layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
-                              <ComboBox minHeight="32.0" prefWidth="150.0" promptText="PM">
-                                 <HBox.margin>
-                                    <Insets left="4.0" />
-                                 </HBox.margin>
-                              </ComboBox>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-                <Separator layoutX="40.0" layoutY="401.0" prefWidth="200.0" />
+                <Separator layoutX="40.0" layoutY="304.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></Separator>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Button fx:id="saveButton" minWidth="75.0" mnemonicParsing="false" text="Save">
