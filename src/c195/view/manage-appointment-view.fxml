@@ -62,14 +62,14 @@
                         <Label text="Start Time" textFill="#00000091" />
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
                            <children>
-                              <TextField minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
+                              <TextField fx:id="startHourTimeField" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
                               <Label minHeight="32.0" text=":">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
-                              <ComboBox minHeight="32.0" prefWidth="150.0" promptText="PM">
+                              <TextField fx:id="startMinuteTimeField" layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
+                              <ComboBox fx:id="startPmAmCombo" minHeight="32.0" prefWidth="150.0" promptText="PM">
                                  <HBox.margin>
                                     <Insets left="4.0" />
                                  </HBox.margin>
@@ -83,14 +83,14 @@
                         <Label text="End Time" textFill="#00000091" />
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
                            <children>
-                              <TextField minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
+                              <TextField fx:id="endHourTimeField" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Hour" />
                               <Label minHeight="32.0" text=":">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
-                              <ComboBox minHeight="32.0" prefWidth="150.0" promptText="PM">
+                              <TextField fx:id="endMinuteTimeField" layoutX="10.0" layoutY="10.0" minHeight="32.0" prefHeight="32.0" prefWidth="136.0" promptText="Minute" />
+                              <ComboBox fx:id="endPmAmCombo" minHeight="32.0" prefWidth="150.0" promptText="PM">
                                  <HBox.margin>
                                     <Insets left="4.0" />
                                  </HBox.margin>
@@ -107,12 +107,12 @@
                </VBox.margin></Separator>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Button fx:id="saveButton" minWidth="75.0" mnemonicParsing="false" text="Save">
+                        <Button fx:id="saveButton" minWidth="75.0" mnemonicParsing="false" onAction="#saveAction" text="Save">
                             <font>
                                 <Font size="16.0" />
                             </font>
                         </Button>
-                        <Button fx:id="cancelButton" layoutX="10.0" layoutY="10.0" minWidth="75.0" mnemonicParsing="false" text="Cancel">
+                        <Button fx:id="cancelButton" layoutX="10.0" layoutY="10.0" minWidth="75.0" mnemonicParsing="false" onAction="#cancelAction" text="Cancel">
                             <font>
                                 <Font size="16.0" />
                             </font>
