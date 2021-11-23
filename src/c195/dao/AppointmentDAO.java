@@ -12,10 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class AppointmentDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter utcDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -35,7 +39,78 @@ public class AppointmentDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        final Comparator<Appointment> appointmentComparator = Comparator.comparingLong(Appointment::getAppointmentID);
+
+        return appointments.sorted(appointmentComparator);
+    }
+
+    public static ObservableList<Appointment> getOverlappingAppointments(LocalDateTime start, LocalDateTime end) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        final String getAllOverlappingAppointmentsQuery = """
+                SELECT * FROM client_schedule.appointments as app
+                JOIN customers as cus
+                ON cus.Customer_ID = app.Customer_ID
+                WHERE (app.Start >= ? AND app.End <= ?)
+                OR (app.Start <= ? AND app.End >= ?)
+                OR (app.Start BETWEEN ? AND ? OR app.End BETWEEN ? AND ?);""";
+
+        try (PreparedStatement statement = SQLDBService.getConnection().prepareStatement(getAllOverlappingAppointmentsQuery)) {
+            final String startDateTimeValue = LocalDateTime.ofInstant(start.toInstant(ZoneOffset.UTC), ZoneId.of("UTC"))
+                    .toString().replace("T", " ");
+            final String endDateTimeValue = LocalDateTime.ofInstant(end.toInstant(ZoneOffset.UTC), ZoneId.of("UTC"))
+                    .toString().replace("T", " ");
+            statement.setString(1, startDateTimeValue);
+            statement.setString(2, endDateTimeValue);
+            statement.setString(3, startDateTimeValue);
+            statement.setString(4, endDateTimeValue);
+            statement.setString(5, startDateTimeValue);
+            statement.setString(6, endDateTimeValue);
+            statement.setString(7, startDateTimeValue);
+            statement.setString(8, endDateTimeValue);
+            final ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                final Appointment appointment = pullAppointmentResultSet(resultSet);
+                appointments.add(appointment);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         return appointments;
+    }
+
+    public static void addAppointment(Appointment appointment) {
+        final String createAppointmentSQLQuery = """
+                INSERT INTO appointments(
+                Title,\sDescription,\sLocation,\sType,\s
+                Start, End,\sCreate_Date, Created_By,\s
+                Last_Update, Last_Updated_By,\s
+                Customer_ID, User_ID, Contact_ID)\s
+                VALUES (?,?,?,?,?,?,now(),?,now(),?,?,?,?);""";
+        LocalDateTime startUTCLocalTime = LocalDateTime.ofInstant(appointment.getStart().toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+        LocalDateTime endUTCLocalTime = LocalDateTime.ofInstant(appointment.getEnd().toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+        try (PreparedStatement statement = SQLDBService.getConnection().prepareStatement(createAppointmentSQLQuery)) {
+            final User currentUser = UserDAO.getCurrentUser();
+            statement.setString(1, appointment.getTitle());
+            statement.setString(2, appointment.getDescription());
+            statement.setString(3, appointment.getLocation());
+            statement.setString(4, appointment.getType());
+            final String startUTCTime = startUTCLocalTime.toString().replace("T", " ");
+            statement.setString(5, startUTCTime);
+            final String endUTCTime = endUTCLocalTime.toString().replace("T", " ");
+            statement.setString(6, endUTCTime);
+            statement.setString(7, currentUser.getUsername());
+            statement.setString(8, currentUser.getUsername());
+            statement.setLong(9, appointment.getCustomer().getCustomerID());
+            statement.setLong(10, currentUser.getUserID());
+            statement.setLong(11, appointment.getContact().getContactID());
+            statement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private static Appointment pullAppointmentResultSet(ResultSet resultSet) throws SQLException {
@@ -83,8 +158,7 @@ public class AppointmentDAO {
 
     public static ObservableList<Appointment> getAppointmentByCustomer(Customer customer) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-        String getAllAppointmentsQuery =
-        """
+        String getAllAppointmentsQuery = """
                 SELECT * FROM appointments AS a\040
                                 JOIN customers as c\040
                                 ON a.Customer_ID = c.Customer_ID\040

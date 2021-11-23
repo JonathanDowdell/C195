@@ -1,6 +1,12 @@
 package c195.model;
 
+import c195.exception.InvalidAppointmentException;
+
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Appointment {
@@ -142,5 +148,71 @@ public class Appointment {
     @Override
     public int hashCode() {
         return Objects.hash(appointmentID, title, description, location, type, start, end, createDate, createdBy, lastUpdate, lastUpdatedBy, customer, user, contact);
+    }
+
+    public boolean validate() throws InvalidAppointmentException {
+
+        if (title == null || title.isEmpty()) {
+            throw new InvalidAppointmentException("Missing Title");
+        }
+
+        if (description == null || description.isEmpty()) {
+            throw new InvalidAppointmentException("Missing Description");
+        }
+
+        if (location == null || location.isEmpty()) {
+            throw new InvalidAppointmentException("Missing Location");
+        }
+
+        if (type == null || type.isEmpty()) {
+            throw new InvalidAppointmentException("Missing Type");
+        }
+
+        if (customer == null) {
+            throw new InvalidAppointmentException("Missing Customer");
+        }
+
+        if (contact == null) {
+            throw new InvalidAppointmentException("Missing Contact");
+        }
+
+        if (start == null) {
+            throw new InvalidAppointmentException("Missing Start Time");
+        } else if (timeOutsideWorkHours(start)) {
+            throw new InvalidAppointmentException("Start Time not within working hours");
+        } else if (dayOutsideWorkHours(start)) {
+            throw new InvalidAppointmentException("Start Day not within working hours");
+        }
+
+        if (end == null) {
+            throw new InvalidAppointmentException("Missing End Time");
+        } else if (timeOutsideWorkHours(end)) {
+            throw new InvalidAppointmentException("End Time not within working hours");
+        } else if (dayOutsideWorkHours(end)) {
+            throw new InvalidAppointmentException("End Day not within working hours");
+        }
+
+        return true;
+    }
+
+    private boolean timeOutsideWorkHours(LocalDateTime localDateTime)  {
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
+        final ZonedDateTime currentZonedDateTimeEST = localDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York"));
+
+        final LocalDateTime openDateTime = LocalDateTime
+                .parse(currentZonedDateTimeEST.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 7:59 AM", dateTimeFormatter);
+        final ZonedDateTime openZonedDateTimeEST = openDateTime.atZone(ZoneId.of("America/New_York"));
+
+        final LocalDateTime closeDateTime = LocalDateTime
+                .parse(currentZonedDateTimeEST.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 10:01 PM", dateTimeFormatter);
+        final ZonedDateTime closeZonedDateTimeEST = closeDateTime.atZone(ZoneId.of("America/New_York"));
+        return !currentZonedDateTimeEST.isAfter(openZonedDateTimeEST) || !currentZonedDateTimeEST.isBefore(closeZonedDateTimeEST);
+    }
+
+    private boolean dayOutsideWorkHours(LocalDateTime localDateTime)  {
+        final ZonedDateTime currentZonedDateTimeEST = localDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York"));
+        System.out.println(currentZonedDateTimeEST.getDayOfWeek());
+        return currentZonedDateTimeEST.getDayOfWeek() == DayOfWeek.SATURDAY
+                || currentZonedDateTimeEST.getDayOfWeek() == DayOfWeek.SUNDAY;
     }
 }

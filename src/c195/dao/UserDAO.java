@@ -76,6 +76,7 @@ public class UserDAO {
 
     public static User pullUserFromResultSet(ResultSet resultSet) throws SQLException {
         User user = new User();
+        user.setUserID(resultSet.getLong("User_ID"));
         user.setUsername(resultSet.getString("User_Name"));
         user.setPassword(resultSet.getString("Password"));
         String createDateString = resultSet.getString("Create_Date");
@@ -97,8 +98,7 @@ public class UserDAO {
             String loginQuery = "SELECT * FROM users WHERE User_Name='" + username + "' AND Password='" + password + "'";
             ResultSet resultSet = statement.executeQuery(loginQuery);
             if (resultSet.next()) {
-                currentUser = new User();
-                currentUser.setUsername(resultSet.getString("User_Name"));
+                currentUser = pullUserFromResultSet(resultSet);
                 statement.close();
                 return true;
             } else {

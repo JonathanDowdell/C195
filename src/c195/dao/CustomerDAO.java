@@ -22,8 +22,7 @@ public class CustomerDAO {
                 Created_By,Last_Update,Last_Updated_By,Division_ID) VALUES (
                 ?,?,?,?,now(),?,now(),?, ?);""";
 
-        try {
-            PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerCreateQuery);
+        try(PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerCreateQuery)) {
             statement.setString(1, customer.getCustomerName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
