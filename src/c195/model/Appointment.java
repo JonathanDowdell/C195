@@ -1,6 +1,8 @@
 package c195.model;
 
+import c195.dao.AppointmentDAO;
 import c195.exception.InvalidAppointmentException;
+import javafx.collections.ObservableList;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -192,7 +194,20 @@ public class Appointment {
             throw new InvalidAppointmentException("End Day not within working hours");
         }
 
+        if (!dateTimeCorrectOrder(start, end)) {
+            throw new InvalidAppointmentException("End Date is before Start Date");
+        }
+
+        final ObservableList<Appointment> overlappingAppointments = AppointmentDAO.getOverlappingAppointments(start, end);
+        if (overlappingAppointments.size() > 0) {
+            throw new InvalidAppointmentException("Overlapping Appointment");
+        }
+
         return true;
+    }
+
+    private boolean dateTimeCorrectOrder(LocalDateTime start, LocalDateTime end) {
+        return start.isBefore(end);
     }
 
     private boolean timeOutsideWorkHours(LocalDateTime localDateTime)  {
@@ -211,7 +226,6 @@ public class Appointment {
 
     private boolean dayOutsideWorkHours(LocalDateTime localDateTime)  {
         final ZonedDateTime currentZonedDateTimeEST = localDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York"));
-        System.out.println(currentZonedDateTimeEST.getDayOfWeek());
         return currentZonedDateTimeEST.getDayOfWeek() == DayOfWeek.SATURDAY
                 || currentZonedDateTimeEST.getDayOfWeek() == DayOfWeek.SUNDAY;
     }

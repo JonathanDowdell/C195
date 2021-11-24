@@ -37,7 +37,7 @@ public class NavigationHelper {
         Parent parent = fxmlLoader.load();
         if (appointment != null) {
             ManageAppointmentViewController manageAppointmentViewController = fxmlLoader.getController();
-            // TODO: 11/21/2021 Add appointment loader
+            manageAppointmentViewController.loadAppointment(appointment);
         }
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -52,5 +52,9 @@ public class NavigationHelper {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static void reportView(ActionEvent event) throws IOException {
+        navigator(event, "view/report-view.fxml");
     }
 }

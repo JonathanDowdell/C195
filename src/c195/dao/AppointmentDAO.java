@@ -21,6 +21,18 @@ public class AppointmentDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter utcDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    public static boolean removeAppointment(Appointment appointment) {
+        String deletionQuery = "DELETE FROM appointments WHERE Appointment_ID = ?";
+        try(PreparedStatement statement = SQLDBService.getConnection().prepareStatement(deletionQuery)) {
+            statement.setLong(1, appointment.getAppointmentID());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         String getAllAppointmentsQuery = "SELECT * FROM appointments AS a " +
@@ -40,21 +52,24 @@ public class AppointmentDAO {
             throwables.printStackTrace();
         }
 
-        final Comparator<Appointment> appointmentComparator = Comparator.comparingLong(Appointment::getAppointmentID);
-
-        return appointments.sorted(appointmentComparator);
+        return appointments;
     }
 
     public static ObservableList<Appointment> getOverlappingAppointments(LocalDateTime start, LocalDateTime end) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
         final String getAllOverlappingAppointmentsQuery = """
-                SELECT * FROM client_schedule.appointments as app
+                SELECT * FROM appointments as a
+                JOIN customers as c
+                ON a.Customer_ID = c.Customer_ID
+                JOIN users as u
+                ON a.User_ID = u.User_ID
+                JOIN contacts as cont
+                ON a.Contact_ID = cont.Contact_ID
                 JOIN customers as cus
-                ON cus.Customer_ID = app.Customer_ID
-                WHERE (app.Start >= ? AND app.End <= ?)
-                OR (app.Start <= ? AND app.End >= ?)
-                OR (app.Start BETWEEN ? AND ? OR app.End BETWEEN ? AND ?);""";
+                WHERE (a.Start >= ? AND a.End <= ?)
+                OR (a.Start <= ? AND a.End >= ?)
+                OR (a.Start BETWEEN ? AND ? OR a.End BETWEEN ? AND ?);""";
 
         try (PreparedStatement statement = SQLDBService.getConnection().prepareStatement(getAllOverlappingAppointmentsQuery)) {
             final String startDateTimeValue = LocalDateTime.ofInstant(start.toInstant(ZoneOffset.UTC), ZoneId.of("UTC"))

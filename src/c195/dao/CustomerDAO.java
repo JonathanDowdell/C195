@@ -102,7 +102,8 @@ public class CustomerDAO {
         try {
             PreparedStatement statement = SQLDBService.getConnection().prepareStatement(deletionQuery);
             statement.setLong(1, customer.getCustomerID());
-            return statement.executeUpdate() == 1;
+            statement.executeUpdate();
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

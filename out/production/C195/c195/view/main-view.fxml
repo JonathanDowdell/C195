@@ -6,6 +6,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -40,19 +41,29 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="34.0" prefWidth="351.0">
+                  <HBox prefHeight="34.0" prefWidth="351.0" spacing="15.0">
                      <children>
                         <Label text="Manage Appointment">
                            <font>
                               <Font size="25.0" />
                            </font>
                         </Label>
+                        <Label fx:id="upcomingAppointmentsLabel" layoutX="10.0" layoutY="10.0" minHeight="36.0" text="No Appointments within 15 minutes">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                         <HBox alignment="CENTER_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <RadioButton mnemonicParsing="false" text="Weekly" />
-                              <RadioButton mnemonicParsing="false" text="Monthly" />
+                        <RadioButton fx:id="allSortSelection" toggleGroup="$sortByGroup" mnemonicParsing="false" selected="true" text="All">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="sortByGroup" />
+                           </toggleGroup>
+                        </RadioButton>
+                              <RadioButton fx:id="monthSortSelection" mnemonicParsing="false" text="Month" toggleGroup="$sortByGroup" />
+                              <RadioButton fx:id="weekSortSelection" mnemonicParsing="false" text="Week" toggleGroup="$sortByGroup" />
                            </children>
                         </HBox>
                      </children>
@@ -77,8 +88,8 @@
                   <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
                      <children>
                         <Button fx:id="addAppointmentButton" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#addAppointmentAction" text="Add" />
-                        <Button fx:id="modifyAppointmentButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" text="Modify" />
-                        <Button fx:id="deleteAppointmentButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="modifyAppointmentButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#modifyAppointmentAction" text="Modify" />
+                        <Button fx:id="deleteAppointmentButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#deleteAppointmentAction" text="Delete" />
                      </children>
                   </HBox>
                </children>
@@ -87,7 +98,7 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="560.0">
          <children>
-            <Button mnemonicParsing="false" text="Report">
+            <Button onAction="#navigateToReport" mnemonicParsing="false" text="Report">
                <font>
                   <Font size="17.0" />
                </font>

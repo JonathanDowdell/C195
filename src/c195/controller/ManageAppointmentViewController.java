@@ -7,6 +7,7 @@ import c195.exception.InvalidAppointmentException;
 import c195.model.Appointment;
 import c195.model.Contact;
 import c195.model.Customer;
+import c195.util.LocalDateTimeHelper;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
 import javafx.collections.ObservableList;
@@ -140,6 +141,27 @@ public class ManageAppointmentViewController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadAppointment(Appointment appointment) {
+        customerComboField.getSelectionModel().select(appointment.getCustomer());
+        contactComboField.getSelectionModel().select(appointment.getContact());
+        idTextField.setText(String.valueOf(appointment.getAppointmentID()));
+        titleTextField.setText(appointment.getTitle());
+        descriptionTextField.setText(appointment.getDescription());
+        locationTextField.setText(appointment.getLocation());
+        typeTextField.setText(appointment.getType());
+
+        startDateField.setValue(appointment.getStart().toLocalDate());
+        endDateField.setValue(appointment.getEnd().toLocalDate());
+
+        startHourTimeField.setText(LocalDateTimeHelper.get12Hour(appointment.getStart()));
+        startMinuteTimeField.setText(LocalDateTimeHelper.get12Minute(appointment.getStart()));
+        startPmAmCombo.getSelectionModel().select(LocalDateTimeHelper.get12AMPM(appointment.getStart()).toUpperCase());
+
+        endHourTimeField.setText(LocalDateTimeHelper.get12Hour(appointment.getEnd()));
+        endMinuteTimeField.setText(LocalDateTimeHelper.get12Minute(appointment.getEnd()));
+        endPmAmCombo.getSelectionModel().select(LocalDateTimeHelper.get12AMPM(appointment.getEnd()).toUpperCase());
     }
 
     private LocalDateTime createLocalDateTime(LocalDate localDate, String hour, String minute, String pmAM) throws InvalidAppointmentException {
