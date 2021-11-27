@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class SQLDBService {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -18,6 +21,9 @@ public class SQLDBService {
 
     public SQLDBService() {}
 
+    /**
+     * Connect to SQL Database
+     */
     public static void connect() {
         try {
             Class.forName(driver);
@@ -32,6 +38,9 @@ public class SQLDBService {
         }
     }
 
+    /**
+     * Disconnect from SQL Database
+     */
     public static void disconnect() {
         try {
             connection.close();

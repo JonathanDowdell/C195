@@ -2,6 +2,9 @@ package c195.model;
 
 import java.util.Objects;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class Contact {
     private long contactID;
     private String contactName;

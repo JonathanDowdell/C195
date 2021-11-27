@@ -14,11 +14,26 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class NavigationHelper {
+
+    /**
+     * Navigate to MainView
+     * @param event
+     * @throws IOException
+     */
     public static void mainView(ActionEvent event) throws IOException {
         navigator(event, "view/main-view.fxml");
     }
 
+    /**
+     * Navigate to CustomerView
+     * @param event
+     * @param customer
+     * @throws IOException
+     */
     public static void customerView(ActionEvent event, Customer customer) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/manage-customer-view.fxml"));
         Parent parent = fxmlLoader.load();
@@ -32,6 +47,12 @@ public class NavigationHelper {
         stage.show();
     }
 
+    /**
+     * Navigate to Appointment View
+     * @param event
+     * @param appointment
+     * @throws IOException
+     */
     public static void manageAppointmentView(ActionEvent event, Appointment appointment) throws IOException {
         final FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/manage-appointment-view.fxml"));
         Parent parent = fxmlLoader.load();
@@ -45,6 +66,15 @@ public class NavigationHelper {
         stage.show();
     }
 
+    /**
+     * Navigate to Report View
+     * @param event
+     * @throws IOException
+     */
+    public static void reportView(ActionEvent event) throws IOException {
+        navigator(event, "view/report-view.fxml");
+    }
+
     public static void navigator(ActionEvent event, String designation) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(designation));
         Parent parent = fxmlLoader.load();
@@ -52,9 +82,5 @@ public class NavigationHelper {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void reportView(ActionEvent event) throws IOException {
-        navigator(event, "view/report-view.fxml");
     }
 }

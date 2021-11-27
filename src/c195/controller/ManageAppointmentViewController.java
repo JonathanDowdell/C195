@@ -20,13 +20,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class ManageAppointmentViewController implements Initializable {
 
 
@@ -87,6 +86,10 @@ public class ManageAppointmentViewController implements Initializable {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
 
+    /**
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         customerComboField.setItems(customers);
@@ -96,8 +99,27 @@ public class ManageAppointmentViewController implements Initializable {
         endPmAmCombo.getItems().addAll("PM", "AM");
         endPmAmCombo.getSelectionModel().select(0);
 
+        numbersOnlyField(startHourTimeField);
+        numbersOnlyField(startMinuteTimeField);
+        numbersOnlyField(endHourTimeField);
+        numbersOnlyField(endMinuteTimeField);
     }
 
+    private void numbersOnlyField(TextField someTextField) {
+        someTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                someTextField.setText(newValue.replaceAll("[^\\d]", ""));
+            } else if (someTextField.getText().length() >= 2) {
+                final String substring = someTextField.getText().substring(0, 2);
+                someTextField.setText(substring);
+            }
+        });
+    }
+
+    /**
+     * Save Appointment
+     * @param event
+     */
     @FXML
     private void saveAction(ActionEvent event) {
 
@@ -130,10 +152,12 @@ public class ManageAppointmentViewController implements Initializable {
         } catch (InvalidAppointmentException e) {
             ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error", "Please Address Error", e.getMessage());
         }
-
-
     }
 
+    /**
+     * Navigate to Main View
+     * @param event
+     */
     @FXML
     private void cancelAction(ActionEvent event) {
         try {
@@ -143,6 +167,10 @@ public class ManageAppointmentViewController implements Initializable {
         }
     }
 
+    /**
+     * Load Appointment View Controller using Appointment
+     * @param appointment
+     */
     public void loadAppointment(Appointment appointment) {
         customerComboField.getSelectionModel().select(appointment.getCustomer());
         contactComboField.getSelectionModel().select(appointment.getContact());
@@ -164,6 +192,15 @@ public class ManageAppointmentViewController implements Initializable {
         endPmAmCombo.getSelectionModel().select(LocalDateTimeHelper.get12AMPM(appointment.getEnd()).toUpperCase());
     }
 
+    /**
+     * Create LocalDateTime from hour, minute, and pmAM
+     * @param localDate
+     * @param hour
+     * @param minute
+     * @param pmAM
+     * @return LocalDateTime
+     * @throws InvalidAppointmentException
+     */
     private LocalDateTime createLocalDateTime(LocalDate localDate, String hour, String minute, String pmAM) throws InvalidAppointmentException {
         try {
             final String localDateTime = localDate.toString() + " " + hour + ":" + minute + " " + pmAM;
@@ -172,5 +209,4 @@ public class ManageAppointmentViewController implements Initializable {
             throw new InvalidAppointmentException("Missing Date(s)");
         }
     }
-
 }

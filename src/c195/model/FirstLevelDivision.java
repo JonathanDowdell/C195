@@ -3,6 +3,9 @@ package c195.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class FirstLevelDivision {
     private long divisionID;
     private String division;

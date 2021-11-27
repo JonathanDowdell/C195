@@ -12,9 +12,17 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class CustomerDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Add Customer To Database
+     * @param customer
+     * @return boolean
+     */
     public static boolean addCustomer(Customer customer) {
         String customerCreateQuery = """
                 INSERT INTO customers (
@@ -38,6 +46,11 @@ public class CustomerDAO {
         }
     }
 
+    /**
+     * Update Customer Using New Customer
+     * @param customer
+     * @return
+     */
     public static boolean updateCustomer(Customer customer) {
         String customerUpdateQuery = """
         UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?,
@@ -62,6 +75,11 @@ public class CustomerDAO {
         return false;
     }
 
+    /**
+     * Get Customer Using Customer ID
+     * @param customerID
+     * @return Customer
+     */
     public static Customer getCustomer(long customerID) {
         String getCustomerQuery = "SELECT * FROM customers WHERE Customer_ID = ?";
         Customer fetchedCustomer = new Customer();
@@ -95,6 +113,11 @@ public class CustomerDAO {
         return fetchedCustomer;
     }
 
+    /**
+     * Remove Customer Using Customer Object
+     * @param customer
+     * @return
+     */
     public static boolean removeCustomer(Customer customer) {
         String deletionQuery = """
                 DELETE FROM customers WHERE Customer_ID = ?
@@ -110,6 +133,10 @@ public class CustomerDAO {
         return false;
     }
 
+    /**
+     * Get All Customers
+     * @return Observable List of Customers
+     */
     public static ObservableList<Customer> getAllCustomers() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         String getAllUsersQuery = """

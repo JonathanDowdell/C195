@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -17,7 +18,14 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * View Controller for Login View
+ * @author Jonathan Dowdell
+ */
 public class LoginViewController implements Initializable {
+
+    @FXML
+    public Label titleLabel;
 
     @FXML
     public TextField userIDTextField;
@@ -26,10 +34,10 @@ public class LoginViewController implements Initializable {
     public TextField passwordTextField;
 
     @FXML
-    public AnchorPane root;
+    public Label zoneIDLabel;
 
     @FXML
-    public Label zoneIDLabel;
+    public Button signInButton;
 
     private String alertTitle;
     private String alertHeader;
@@ -41,14 +49,20 @@ public class LoginViewController implements Initializable {
         resourceBundle = ResourceBundle.getBundle("Languages", locale);
         String username = resourceBundle.getString("username");
         String password = resourceBundle.getString("password");
+        titleLabel.setText(resourceBundle.getString("title"));
         zoneIDLabel.setText(locale.toString());
         userIDTextField.setPromptText(username);
         passwordTextField.setPromptText(password);
+        signInButton.setText(resourceBundle.getString("login"));
         alertTitle = resourceBundle.getString("alertTitle");
         alertHeader = resourceBundle.getString("alertHeader");
         alertContext = resourceBundle.getString("alertContext");
     }
 
+    /**
+     * Login Using User ID and Password
+     * @author Jonathan Dowdell
+     */
     @FXML
     public void login(ActionEvent event) throws IOException {
         String userID = userIDTextField.getText();

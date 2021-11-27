@@ -11,6 +11,9 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class UserDAO {
     private static User currentUser;
 
@@ -20,6 +23,11 @@ public class UserDAO {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Get User Using User ID
+     * @param userID
+     * @return User
+     */
     public static User getUser(long userID) {
         String getUserQuery = "SELECT * FROM users WHERE User_ID = ?";
         User user = new User();
@@ -52,6 +60,10 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Get All Users
+     * @return Observable List Of Users
+     */
     public static ObservableList<User> getAllUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
         String getAllUsersQuery = "SELECT * FROM users";
@@ -90,9 +102,13 @@ public class UserDAO {
         return user;
     }
 
-    // TODO: Login Attempt
+    /**
+     * Login Using Username and Password
+     * @param username
+     * @param password
+     * @return Successful
+     */
     public static Boolean login(String username, String password) {
-
         try {
             Statement statement = SQLDBService.getConnection().createStatement();
             String loginQuery = "SELECT * FROM users WHERE User_Name='" + username + "' AND Password='" + password + "'";
@@ -106,8 +122,7 @@ public class UserDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 }

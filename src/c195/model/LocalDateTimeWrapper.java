@@ -3,6 +3,9 @@ package c195.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class LocalDateTimeWrapper implements Comparable<LocalDateTime> {
 
     private final LocalDateTime localDateTime;

@@ -2,6 +2,9 @@ package c195.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class User {
     private long userID;
     private String username;

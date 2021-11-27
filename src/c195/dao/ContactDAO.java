@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class ContactDAO {
     public static Contact pullContactFromResultSet(ResultSet resultSet) throws SQLException {
         Contact contact = new Contact();
@@ -17,6 +20,10 @@ public class ContactDAO {
         return contact;
     }
 
+    /**
+     * Load All Contacts From Server
+     * @return Observable List of Appointments
+     */
     public static ObservableList<Contact> getAllContacts() {
         String getAllSQLQuery = "SELECT * FROM contacts";
         ObservableList<Contact> contacts = FXCollections.observableArrayList();

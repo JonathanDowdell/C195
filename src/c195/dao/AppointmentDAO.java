@@ -15,12 +15,18 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class AppointmentDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final DateTimeFormatter utcDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Removes Appointment using the Appointment Object
+     * @param appointment
+     * @return boolean is Appointment was removed
+     */
     public static boolean removeAppointment(Appointment appointment) {
         String deletionQuery = "DELETE FROM appointments WHERE Appointment_ID = ?";
         try(PreparedStatement statement = SQLDBService.getConnection().prepareStatement(deletionQuery)) {
@@ -33,6 +39,10 @@ public class AppointmentDAO {
         }
     }
 
+    /**
+     * Loads Appointments from Database
+     * @return Observable List of Appointments
+     */
     public static ObservableList<Appointment> getAllAppointments() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         String getAllAppointmentsQuery = "SELECT * FROM appointments AS a " +
@@ -55,6 +65,12 @@ public class AppointmentDAO {
         return appointments;
     }
 
+    /**
+     * Loads Overlapping Appointments
+     * @param start LocalDate
+     * @param end LocalDate
+     * @return Observable List of Appointments
+     */
     public static ObservableList<Appointment> getOverlappingAppointments(LocalDateTime start, LocalDateTime end) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -97,6 +113,10 @@ public class AppointmentDAO {
         return appointments;
     }
 
+    /**
+     * Add Appointment to Database
+     * @param appointment
+     */
     public static void addAppointment(Appointment appointment) {
         final String createAppointmentSQLQuery = """
                 INSERT INTO appointments(
@@ -171,6 +191,11 @@ public class AppointmentDAO {
         return appointment;
     }
 
+    /**
+     * Loads Appointments By Customer
+     * @param customer
+     * @return Observable List of Appointments
+     */
     public static ObservableList<Appointment> getAppointmentByCustomer(Customer customer) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         String getAllAppointmentsQuery = """

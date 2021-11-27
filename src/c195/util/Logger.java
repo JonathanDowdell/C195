@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class Logger {
-    private static final String FILENAME = "C195.text";
+    private static final String FILENAME = "login_activity.text";
 
     public Logger() {}
 

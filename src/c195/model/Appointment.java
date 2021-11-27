@@ -11,6 +11,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class Appointment {
     private long appointmentID;
     private String title;

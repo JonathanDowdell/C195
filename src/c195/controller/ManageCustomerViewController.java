@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class ManageCustomerViewController implements Initializable {
     public TextField idTextField;
     public TextField nameTextField;
@@ -34,11 +37,19 @@ public class ManageCustomerViewController implements Initializable {
     public TextField phoneNumberTextField;
     private boolean update = false;
 
+    /**
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         handleComboBox();
     }
 
+    /**
+     * Load Manage Customer View using Customer
+     * @param customer
+     */
     public void loadCustomer(Customer customer) {
         FirstLevelDivision division = customer.getDivision();
         Country country = division.getCountry();
@@ -52,6 +63,10 @@ public class ManageCustomerViewController implements Initializable {
         update = true;
     }
 
+    /**
+     * Save Customer
+     * @param actionEvent
+     */
     @FXML
     private void saveCustomerAction(ActionEvent actionEvent) {
         String name = nameTextField.getText();
@@ -82,6 +97,16 @@ public class ManageCustomerViewController implements Initializable {
         }
     }
 
+    /**
+     * Join TextFields to create Customer
+     * @param customerID
+     * @param name
+     * @param address
+     * @param firstLevelDivision
+     * @param postalCode
+     * @param phoneNumber
+     * @return
+     */
     private Customer joinFieldsToCustomer(long customerID, String name, String address, FirstLevelDivision firstLevelDivision, String postalCode, String phoneNumber) {
         Customer customer = new Customer();
         customer.setCustomerID(customerID);
@@ -95,15 +120,24 @@ public class ManageCustomerViewController implements Initializable {
         return customer;
     }
 
+    /**
+     * Navigate to Main View
+     * @param actionEvent
+     */
     @FXML
     private void cancelAction(ActionEvent actionEvent) {
         try {
             NavigationHelper.mainView(actionEvent);
         } catch (IOException e) {
             e.printStackTrace();
+            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Navigating to Main View");
         }
     }
 
+    /**
+     * Validates Input Fields
+     * @return boolean
+     */
     private boolean validFields() {
         ArrayList<String> errorFields = new ArrayList<>();
         boolean emptyName = nameTextField.getText().isEmpty();

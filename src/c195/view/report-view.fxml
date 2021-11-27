@@ -27,14 +27,14 @@
                 </HBox>
                 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
-                        <Tab text="Type Count">
+                        <Tab text="Appointment Type Count">
                             <content>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
                                         <HBox prefHeight="33.0" prefWidth="600.0" spacing="10.0">
                                             <children>
-                                                <ComboBox fx:id="monthComboBox" minHeight="32.0" prefWidth="150.0" promptText="Month" />
-                                                <ComboBox fx:id="typeComboBox" layoutX="15.0" layoutY="15.0" minHeight="32.0" prefWidth="150.0" promptText="Type" />
+                                                <ComboBox fx:id="typeSectionMonthComboBox" minHeight="32.0" prefWidth="150.0" promptText="Month" />
+                                                <ComboBox fx:id="typeSectionTypeComboBox" layoutX="15.0" layoutY="15.0" minHeight="32.0" prefWidth="150.0" promptText="Type" />
                                     <Button mnemonicParsing="false" onAction="#typeSectionGenerateAction" prefHeight="32.0" text="Generate" />
                                     <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#typeResetAction" prefHeight="32.0" text="Reset" />
                                             </children>
@@ -47,16 +47,16 @@
                                         </HBox>
                                         <TableView fx:id="typesTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                             <columns>
-                                                <TableColumn fx:id="monthColumn" prefWidth="75.0" text="Month" />
-                                                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
-                                                <TableColumn fx:id="countColumn" prefWidth="75.0" text="Count" />
+                                                <TableColumn fx:id="typeSectionMonthColumn" prefWidth="75.0" text="Month" />
+                                                <TableColumn fx:id="typeSectionTypeColumn" prefWidth="75.0" text="Type" />
+                                                <TableColumn fx:id="typeSectionCountColumn" prefWidth="75.0" text="Count" />
                                             </columns>
                                         </TableView>
                                     </children>
                                 </VBox>
                             </content>
                         </Tab>
-                        <Tab text="Customer Appointments">
+                        <Tab text="Appointments By Customer">
                             <content>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
@@ -90,9 +90,49 @@
                                 </VBox>
                             </content>
                         </Tab>
+                        <Tab text="Appointment Location Count">
+                            <content>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <HBox prefHeight="33.0" prefWidth="600.0" spacing="10.0">
+                                            <children>
+                                                <ComboBox fx:id="locationSectionMonthComboBox" minHeight="32.0" prefWidth="150.0" promptText="Month" />
+                                                <ComboBox fx:id="locationSectionComboBox" layoutX="15.0" layoutY="15.0" minHeight="32.0" prefWidth="150.0" promptText="Location" />
+                                                <Button mnemonicParsing="false" onAction="#locationSectionGenerateAction" prefHeight="32.0" text="Generate" />
+                                                <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#locationResetAction" prefHeight="32.0" text="Reset" />
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </padding>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                        </HBox>
+                                        <TableView fx:id="locationsTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="locationSectionMonthColumn" prefWidth="75.0" text="Month" />
+                                                <TableColumn fx:id="locationSectionColumn" prefWidth="75.0" text="Location" />
+                                                <TableColumn fx:id="locationSectionCountColumn" prefWidth="75.0" text="Count" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
                     </tabs>
                 </TabPane>
             </children>
         </VBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="869.0">
+         <children>
+            <Button minHeight="32.0" mnemonicParsing="false" onAction="#mainScreen" text="Back" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets right="15.0" />
+         </padding>
+      </HBox>
     </children>
 </VBox>

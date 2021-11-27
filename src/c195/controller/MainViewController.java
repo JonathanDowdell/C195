@@ -4,6 +4,7 @@ import c195.dao.AppointmentDAO;
 import c195.dao.CustomerDAO;
 import c195.model.Appointment;
 import c195.model.Customer;
+import c195.util.LocalDateTimeHelper;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,10 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
@@ -30,6 +28,9 @@ import java.util.stream.Collectors;
 
 import static c195.util.ModalHelper.displayAlert;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class MainViewController implements Initializable {
 
     @FXML
@@ -120,6 +121,9 @@ public class MainViewController implements Initializable {
         checkAppointments();
     }
 
+    /**
+     * Check if Appointment Exist within 15 minutes
+     */
     private void checkAppointments() {
         for (final Appointment currentAppointment : appointments) {
             final LocalDateTime start = currentAppointment.getStart();
@@ -137,6 +141,9 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Opens Manage Customer View
+     */
     @FXML
     private void addCustomerAction(ActionEvent actionEvent) {
         try {
@@ -147,6 +154,9 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Open Manage Customer View with selected customer
+     */
     @FXML
     private void updateCustomerAction(ActionEvent actionEvent) {
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
@@ -161,6 +171,9 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Delete customer using selected customer
+     */
     @FXML
     private void deleteCustomerAction() {
         try {
@@ -199,6 +212,10 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Open Manage Appointment View
+     * @param event
+     */
     @FXML
     public void addAppointmentAction(ActionEvent event) {
         try {
@@ -208,6 +225,10 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Open Manage Appointment View with selected Appointment
+     * @param event
+     */
     @FXML
     public void modifyAppointmentAction(ActionEvent event) {
         try {
@@ -221,6 +242,10 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Delete Appointment using selected Appointment
+     * @param event
+     */
     @FXML
     public void deleteAppointmentAction(ActionEvent event) {
         try {
@@ -257,6 +282,10 @@ public class MainViewController implements Initializable {
         }
     }
 
+    /**
+     * Open Report View
+     * @param event
+     */
     @FXML
     public void navigateToReport(ActionEvent event) {
         try {
@@ -273,8 +302,13 @@ public class MainViewController implements Initializable {
         appointmentDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         appointmentLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+
         appointmentStartColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        appointmentStartColumn.setCellFactory(LocalDateTimeHelper::dateTimeCell);
+
         appointmentEndColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        appointmentEndColumn.setCellFactory(LocalDateTimeHelper::dateTimeCell);
 
         appointmentCustomerIDColumn.setCellValueFactory(value -> {
             long customerID = value.getValue().getCustomer().getCustomerID();
@@ -309,6 +343,11 @@ public class MainViewController implements Initializable {
         customerDivisionIDColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getDivisionID()));
     }
 
+    /**
+     * Sorts Appointments using Lambda Expressing
+     * Reasoning - Decreased code footprint and Increased code readability
+     * @return Observable List of Appointments
+     */
     private ObservableList<Appointment> sortAppointmentsByThisMonth() {
         final LocalDateTime now = LocalDateTime.now();
         return this.appointments.stream().filter(appointment -> {
@@ -317,6 +356,11 @@ public class MainViewController implements Initializable {
         }).collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
+    /**
+     * Sorts Appointments using Lambda Expressing
+     * Reasoning - Decreased code footprint and Increased code readability
+     * @return Observable List of Appointments
+     */
     private ObservableList<Appointment> sortAppointmentsByThisWeek() {
         final LocalDate now = LocalDate.now();
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();

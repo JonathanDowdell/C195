@@ -2,6 +2,9 @@ package c195.util;
 
 import javafx.scene.control.Alert;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class ModalHelper {
 
     /**

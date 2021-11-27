@@ -1,7 +1,6 @@
 package c195.dao;
 
 import c195.model.Country;
-import c195.model.Customer;
 import c195.model.FirstLevelDivision;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,9 +11,17 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @author Jonathan Dowdell
+ */
 public class FirstLevelDivisionDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Load Observable List Of FirstLevelDivision
+     * @param countryID
+     * @return Get Observable List Of FirstLevelDivision
+     */
     public static ObservableList<FirstLevelDivision> getByCountryID(long countryID) {
         ObservableList<FirstLevelDivision> firstLevelDivisions = FXCollections.observableArrayList();
         String firstLevelQuery = """
