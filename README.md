@@ -22,7 +22,7 @@ Cores: 4
 Kotlin: 211-1.4.32-release-IJ7142.27
 
 ## JDK version
-
+openjdk-17.0.1
 
 ## JavaFX version
 openjfx-17.0.1
@@ -33,21 +33,17 @@ mysql-connector-java-8.0.25
 ## Database Schema 
 
 # How to run app
-Create a `database.xml` file in the root of the directory of the repo with the following contents (being sure to fill in the nodes):
-
-```xml
-<?xml version = "1.0"?>
-<database>
-    <server></server>
-    <port></port>
-    <name></name>
-    <user></user>
-    <password></password>
-</database>
+Fill in `config.properties` file in the root directory of the repo with the following credentials:
+```properties
+database.protocol=jdbc
+database.vendor=mysql
+database.location=localhost
+database.name=client_schedule
+database.driver=com.mysql.cj.jdbc.Driver
+database.username=sqlUser
+database.password=Passw0rd!
 ```
 
-You will also need a user in the database with the username "test".
-
-## Additional report
-
-For the additional report, I chose to get a rundown of all customers per division.
+## Login Credentials are as follows:
+* Username - test
+* Password - test
