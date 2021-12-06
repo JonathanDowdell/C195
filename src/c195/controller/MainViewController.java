@@ -344,11 +344,12 @@ public class MainViewController implements Initializable {
     }
 
     /**
-     * Sorts Appointments using Lambda Expressing
+     * Sorts Appointments using Lambda Expressing.
+     * Lambda - ...
      * Reasoning - Decreased code footprint and Increased code readability
      * @return Observable List of Appointments
      */
-    private ObservableList<Appointment> sortAppointmentsByThisMonth() {
+    public ObservableList<Appointment> sortAppointmentsByThisMonth() {
         final LocalDateTime now = LocalDateTime.now();
         return this.appointments.stream().filter(appointment -> {
             final LocalDateTime start = appointment.getStart();

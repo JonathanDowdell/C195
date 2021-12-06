@@ -16,10 +16,10 @@ public class LocalDateTimeHelper {
     public static DateTimeFormatter formatter12Hour = DateTimeFormatter.ofPattern("hh");
     public static DateTimeFormatter formatter12Minute = DateTimeFormatter.ofPattern("mm");
     public static DateTimeFormatter formatter12AMPM = DateTimeFormatter.ofPattern("a");
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a z");
 
     /**
-     * Get Hour from LocalDateTime using 12 Hour
+     * Get Hour from LocalDateTime using 12 Hour.
      * @param localDateTime LocalDateTime
      * @return Hour String
      */
@@ -29,7 +29,7 @@ public class LocalDateTimeHelper {
     }
 
     /**
-     * Get Minute from LocalDateTime using 12 Hour
+     * Get Minute from LocalDateTime using 12 Hour.
      * @param localDateTime LocalDateTime
      * @return Minute String
      */
@@ -39,7 +39,7 @@ public class LocalDateTimeHelper {
     }
 
     /**
-     * Get AMPM from LocalDateTime using 12 Hour
+     * Get AMPM from LocalDateTime using 12 Hour.
      * @param localDateTime LocalDateTime
      * @return AMPM String
      */

@@ -18,7 +18,7 @@ public class SQLDBService {
     public SQLDBService() {}
 
     /**
-     * Connect to SQL Database
+     * Connect to SQL Database.
      */
     public static void connect() {
 
@@ -51,7 +51,7 @@ public class SQLDBService {
     }
 
     /**
-     * Disconnect from SQL Database
+     * Disconnect from SQL Database.
      */
     public static void disconnect() {
         try {

@@ -18,17 +18,13 @@ public class FirstLevelDivisionDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Load Observable List Of FirstLevelDivision
-     * @param countryID
-     * @return Get Observable List Of FirstLevelDivision
+     * Load Observable List Of FirstLevelDivision.
+     * @param countryID long
+     * @return Get Observable List Of FirstLevelDivision.
      */
     public static ObservableList<FirstLevelDivision> getByCountryID(long countryID) {
         ObservableList<FirstLevelDivision> firstLevelDivisions = FXCollections.observableArrayList();
-        String firstLevelQuery = """
-                SELECT * FROM first_level_divisions as fld
-                JOIN countries as co
-                ON fld.Country_ID = co.Country_ID
-                WHERE fld.Country_ID = ?""";
+        String firstLevelQuery = "SELECT * FROM first_level_divisions as fld JOIN countries as co ON fld.Country_ID = co.Country_ID WHERE fld.Country_ID = ?";
         try {
             PreparedStatement statement = SQLDBService.getConnection().prepareStatement(firstLevelQuery);
             statement.setLong(1, countryID);

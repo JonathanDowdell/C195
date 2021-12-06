@@ -1,7 +1,6 @@
 package c195.dao;
 
 import c195.model.Country;
-import c195.model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,8 +19,8 @@ public class CountryDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Load Customers by Country ID
-     * @param countryID
+     * Load Customers by Country ID.
+     * @param countryID long
      * @return Country
      */
     public static Country getCustomerByID(long countryID) {
@@ -56,8 +55,8 @@ public class CountryDAO {
     }
 
     /**
-     * Get All Countries
-     * @return Observable List of Countries
+     * Get All Countries.
+     * @return Observable List of Countries.
      */
     public static ObservableList<Country> getAllCountries() {
         String getAllCountriesQuery = "SELECT * FROM countries";

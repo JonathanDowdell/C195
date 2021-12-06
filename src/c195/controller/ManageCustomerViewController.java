@@ -47,7 +47,7 @@ public class ManageCustomerViewController implements Initializable {
     }
 
     /**
-     * Load Manage Customer View using Customer
+     * Load Manage Customer View using Customer.
      * @param customer
      */
     public void loadCustomer(Customer customer) {
@@ -98,7 +98,7 @@ public class ManageCustomerViewController implements Initializable {
     }
 
     /**
-     * Join TextFields to create Customer
+     * Join TextFields to create Customer.
      * @param customerID
      * @param name
      * @param address
@@ -135,7 +135,7 @@ public class ManageCustomerViewController implements Initializable {
     }
 
     /**
-     * Validates Input Fields
+     * Validates Input Fields.
      * @return boolean
      */
     private boolean validFields() {

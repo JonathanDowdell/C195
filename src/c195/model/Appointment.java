@@ -2,14 +2,14 @@ package c195.model;
 
 import c195.dao.AppointmentDAO;
 import c195.exception.InvalidAppointmentException;
-import javafx.collections.ObservableList;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Jonathan Dowdell
@@ -183,48 +183,60 @@ public class Appointment {
 
         if (start == null) {
             throw new InvalidAppointmentException("Missing Start Time");
-        } else if (timeOutsideWorkHours(start)) {
-            throw new InvalidAppointmentException("Start Time not within working hours");
         } else if (dayOutsideWorkHours(start)) {
             throw new InvalidAppointmentException("Start Day not within working hours");
+        } else if (invalidTime(start)) {
+            throw new InvalidAppointmentException("Start Time not within working hours");
         }
 
         if (end == null) {
             throw new InvalidAppointmentException("Missing End Time");
-        } else if (timeOutsideWorkHours(end)) {
-            throw new InvalidAppointmentException("End Time not within working hours");
         } else if (dayOutsideWorkHours(end)) {
             throw new InvalidAppointmentException("End Day not within working hours");
+        } else if (invalidTime(end)) {
+            throw new InvalidAppointmentException("End Time not within working hours");
         }
 
-        if (!dateTimeCorrectOrder(start, end)) {
+        if (end.isBefore(start)) {
             throw new InvalidAppointmentException("End Date is before Start Date");
         }
 
-        final ObservableList<Appointment> overlappingAppointments = AppointmentDAO.getOverlappingAppointments(start, end);
-        if (overlappingAppointments.size() > 0) {
+        final LocalDateTime now = LocalDateTime.now();
+
+        if (start.isBefore(now)) {
+            throw new InvalidAppointmentException("Start Date has already pasted");
+        }
+
+        if (end.isBefore(now)) {
+            throw new InvalidAppointmentException("End Date has already pasted");
+        }
+
+        final boolean hasOverlappingAppointments = AppointmentDAO.hasOverlappingAppointments(start, end, customer.getCustomerID());
+        if (hasOverlappingAppointments) {
             throw new InvalidAppointmentException("Overlapping Appointment");
         }
 
         return true;
     }
 
-    private boolean dateTimeCorrectOrder(LocalDateTime start, LocalDateTime end) {
-        return start.isBefore(end);
-    }
+    private boolean invalidTime(LocalDateTime targetLocalDateTime) {
+        System.out.println(targetLocalDateTime);
+        int year = targetLocalDateTime.getYear();
+        int month = targetLocalDateTime.getMonth().getValue();
+        int dayOfMonth = targetLocalDateTime.getDayOfMonth();
 
-    private boolean timeOutsideWorkHours(LocalDateTime localDateTime)  {
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
-        final ZonedDateTime currentZonedDateTimeEST = localDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York"));
+        SimpleDateFormat estDateFormatter = new SimpleDateFormat("yyyy-M-d h:m a z");
+        estDateFormatter.setTimeZone(TimeZone.getTimeZone("EST"));
 
-        final LocalDateTime openDateTime = LocalDateTime
-                .parse(currentZonedDateTimeEST.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 7:59 AM", dateTimeFormatter);
-        final ZonedDateTime openZonedDateTimeEST = openDateTime.atZone(ZoneId.of("America/New_York"));
+        Date targetDate = Date.from(targetLocalDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        try {
+            Date openDate = estDateFormatter.parse(year + "-" + month + "-" + dayOfMonth + " 08:00 AM EST");
+            Date closeDate = estDateFormatter.parse(year + "-" + month + "-" + dayOfMonth + " 10:00 PM EST");
+            return (targetDate.compareTo(openDate) < 0) || (targetDate.compareTo(closeDate) > 0);
+        } catch (ParseException e) {
+            return true;
+        }
 
-        final LocalDateTime closeDateTime = LocalDateTime
-                .parse(currentZonedDateTimeEST.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 10:01 PM", dateTimeFormatter);
-        final ZonedDateTime closeZonedDateTimeEST = closeDateTime.atZone(ZoneId.of("America/New_York"));
-        return !currentZonedDateTimeEST.isAfter(openZonedDateTimeEST) || !currentZonedDateTimeEST.isBefore(closeZonedDateTimeEST);
     }
 
     private boolean dayOutsideWorkHours(LocalDateTime localDateTime)  {

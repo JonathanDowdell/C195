@@ -24,8 +24,8 @@ public class UserDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Get User Using User ID
-     * @param userID
+     * Get User Using User ID.
+     * @param userID long
      * @return User
      */
     public static User getUser(long userID) {
@@ -61,8 +61,8 @@ public class UserDAO {
     }
 
     /**
-     * Get All Users
-     * @return Observable List Of Users
+     * Get All Users.
+     * @return Observable List Of Users.
      */
     public static ObservableList<User> getAllUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
@@ -103,9 +103,9 @@ public class UserDAO {
     }
 
     /**
-     * Login Using Username and Password
-     * @param username
-     * @param password
+     * Login Using Username and Password.
+     * @param username String
+     * @param password String
      * @return Successful
      */
     public static Boolean login(String username, String password) {

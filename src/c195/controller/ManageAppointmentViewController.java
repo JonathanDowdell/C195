@@ -3,6 +3,7 @@ package c195.controller;
 import c195.dao.AppointmentDAO;
 import c195.dao.ContactDAO;
 import c195.dao.CustomerDAO;
+import c195.dao.UserDAO;
 import c195.exception.InvalidAppointmentException;
 import c195.model.Appointment;
 import c195.model.Contact;
@@ -117,12 +118,12 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Save Appointment
+     * Save Appointment.
      * @param event
      */
     @FXML
     private void saveAction(ActionEvent event) {
-
+        final boolean updatingAppointment = !idTextField.getText().isEmpty();
         try {
             // Start Date Time
             final LocalDateTime startLocalDateTime = createLocalDateTime(startDateField.getValue(), startHourTimeField.getText(),
@@ -143,10 +144,20 @@ public class ManageAppointmentViewController implements Initializable {
             appointment.setEnd(endLocalDateTime);
             appointment.setCustomer(customerComboField.getValue());
             appointment.setContact(contactComboField.getValue());
+            appointment.setUser(UserDAO.getCurrentUser());
+
+            if (updatingAppointment) {
+                appointment.setAppointmentID(Long.parseLong(idTextField.getText()));
+            }
 
             appointment.validate();
 
-            AppointmentDAO.addAppointment(appointment);
+
+            if (updatingAppointment) {
+                AppointmentDAO.updateAppointment(appointment);
+            } else {
+                AppointmentDAO.addAppointment(appointment);
+            }
 
             cancelAction(event);
         } catch (InvalidAppointmentException e) {
@@ -155,7 +166,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Navigate to Main View
+     * Navigate to Main View.
      * @param event
      */
     @FXML
@@ -168,7 +179,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Load Appointment View Controller using Appointment
+     * Load Appointment View Controller using Appointment.
      * @param appointment
      */
     public void loadAppointment(Appointment appointment) {
@@ -193,7 +204,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Create LocalDateTime from hour, minute, and pmAM
+     * Create LocalDateTime from hour, minute, and pmAM.
      * @param localDate
      * @param hour
      * @param minute

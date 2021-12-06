@@ -19,16 +19,12 @@ public class CustomerDAO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * Add Customer To Database
+     * Add Customer To Database.
      * @param customer
-     * @return boolean
+     * @return boolean on success.
      */
     public static boolean addCustomer(Customer customer) {
-        String customerCreateQuery = """
-                INSERT INTO customers (
-                Customer_Name,Address,Postal_Code,Phone,Create_Date,
-                Created_By,Last_Update,Last_Updated_By,Division_ID) VALUES (
-                ?,?,?,?,now(),?,now(),?, ?);""";
+        String customerCreateQuery = " INSERT INTO customers ( Customer_Name,Address,Postal_Code,Phone,Create_Date, Created_By,Last_Update,Last_Updated_By,Division_ID) VALUES ( ?,?,?,?,now(),?,now(),?, ?);";
 
         try(PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerCreateQuery)) {
             statement.setString(1, customer.getCustomerName());
@@ -47,16 +43,12 @@ public class CustomerDAO {
     }
 
     /**
-     * Update Customer Using New Customer
-     * @param customer
-     * @return
+     * Update Customer Using New Customer.
+     * @param customer Customer
+     * @return boolean on success.
      */
     public static boolean updateCustomer(Customer customer) {
-        String customerUpdateQuery = """
-        UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?,
-        Last_Update=now(), Last_Updated_By=?, Division_ID=?
-        WHERE Customer_ID=?
-        """;
+        String customerUpdateQuery = " UPDATE customers SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, Last_Update=now(), Last_Updated_By=?, Division_ID=? WHERE Customer_ID=?";
 
         try {
             PreparedStatement statement = SQLDBService.getConnection().prepareStatement(customerUpdateQuery);
@@ -76,8 +68,8 @@ public class CustomerDAO {
     }
 
     /**
-     * Get Customer Using Customer ID
-     * @param customerID
+     * Get Customer Using Customer ID.
+     * @param customerID long
      * @return Customer
      */
     public static Customer getCustomer(long customerID) {
@@ -114,14 +106,12 @@ public class CustomerDAO {
     }
 
     /**
-     * Remove Customer Using Customer Object
-     * @param customer
-     * @return
+     * Remove Customer Using Customer Object.
+     * @param customer Customer
+     * @return boolean on success.
      */
     public static boolean removeCustomer(Customer customer) {
-        String deletionQuery = """
-                DELETE FROM customers WHERE Customer_ID = ?
-                """;
+        String deletionQuery = "DELETE FROM customers WHERE Customer_ID = ?";
         try {
             PreparedStatement statement = SQLDBService.getConnection().prepareStatement(deletionQuery);
             statement.setLong(1, customer.getCustomerID());
@@ -134,18 +124,12 @@ public class CustomerDAO {
     }
 
     /**
-     * Get All Customers
-     * @return Observable List of Customers
+     * Get All Customers.
+     * @return Observable List of Customers.
      */
     public static ObservableList<Customer> getAllCustomers() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
-        String getAllUsersQuery = """
-                SELECT * FROM customers AS cus
-                JOIN first_level_divisions AS fld
-                ON cus.Division_ID = fld.Division_ID
-                JOIN countries AS ctry
-                ON ctry.Country_ID = fld.Country_ID
-                """;
+        String getAllUsersQuery = "SELECT * FROM customers AS cus JOIN first_level_divisions AS fld ON cus.Division_ID = fld.Division_ID JOIN countries AS ctry ON ctry.Country_ID = fld.Country_ID";
         try (Statement statement = SQLDBService.getConnection().createStatement()) {
             ResultSet resultSet = statement.executeQuery(getAllUsersQuery);
             while (resultSet.next()) {

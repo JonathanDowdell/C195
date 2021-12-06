@@ -7,9 +7,11 @@ import c195.model.Appointment;
 import c195.model.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +22,7 @@ import java.io.IOException;
 public class NavigationHelper {
 
     /**
-     * Navigate to MainView
+     * Navigate to MainView.
      * @param event
      * @throws IOException
      */
@@ -29,7 +31,7 @@ public class NavigationHelper {
     }
 
     /**
-     * Navigate to CustomerView
+     * Navigate to CustomerView.
      * @param event
      * @param customer
      * @throws IOException
@@ -45,10 +47,13 @@ public class NavigationHelper {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
     }
 
     /**
-     * Navigate to Appointment View
+     * Navigate to Appointment View.
      * @param event
      * @param appointment
      * @throws IOException
@@ -64,10 +69,13 @@ public class NavigationHelper {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
     }
 
     /**
-     * Navigate to Report View
+     * Navigate to Report View.
      * @param event
      * @throws IOException
      */
@@ -82,5 +90,8 @@ public class NavigationHelper {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
     }
 }

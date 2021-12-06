@@ -21,8 +21,8 @@ public class ContactDAO {
     }
 
     /**
-     * Load All Contacts From Server
-     * @return Observable List of Appointments
+     * Load All Contacts From Server.
+     * @return Observable List of Appointments.
      */
     public static ObservableList<Contact> getAllContacts() {
         String getAllSQLQuery = "SELECT * FROM contacts";

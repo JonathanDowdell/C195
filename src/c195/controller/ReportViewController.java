@@ -275,7 +275,7 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Generate Type By Fields
+     * Generate Type By Fields.
      * @param event
      */
     @FXML
@@ -306,7 +306,7 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Resets Type Section
+     * Resets Type Section.
      * @param event
      */
     @FXML
@@ -356,7 +356,7 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Resets Customer Appointment Section
+     * Resets Customer Appointment Section.
      * @param event
      */
     @FXML
@@ -378,7 +378,7 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Filters Object by Distinct Field (key)
+     * Filters Object by Distinct Field (key).
      * @param keyExtractor
      * @param <T>
      * @return
