@@ -75,8 +75,8 @@ public class AppointmentDAO {
 
         final String getAllOverlappingAppointmentsQuery = "SELECT * FROM appointments " +
                 "WHERE Customer_ID=? " + // 1 - Customer Id
-                "AND (? >= Start AND ? <= End) " + // 2 - Start, 3 - Start
-                "OR (? >= Start AND ? <= End)";// 4 - End, 5 - End
+                "AND (? > Start AND ? < End) " + // 2 - Start, 3 - Start
+                "OR (? > Start AND ? < End)";// 4 - End, 5 - End
 
         try (PreparedStatement statement = SQLDBService.getConnection().prepareStatement(getAllOverlappingAppointmentsQuery)) {
             statement.setLong(1, customerId);

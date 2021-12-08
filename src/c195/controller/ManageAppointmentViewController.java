@@ -1,28 +1,30 @@
 package c195.controller;
 
 import c195.dao.AppointmentDAO;
-import c195.dao.ContactDAO;
-import c195.dao.CustomerDAO;
-import c195.dao.UserDAO;
-import c195.exception.InvalidAppointmentException;
 import c195.model.Appointment;
-import c195.model.Contact;
-import c195.model.Customer;
 import c195.util.LocalDateTimeHelper;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static c195.util.ModalHelper.displayAlert;
 
 /**
  * @author Jonathan Dowdell
@@ -31,193 +33,239 @@ public class ManageAppointmentViewController implements Initializable {
 
 
     @FXML
-    public ComboBox<Customer> customerComboField;
+    public TableColumn<Appointment, Long> appointmentIDColumn;
 
     @FXML
-    public ComboBox<Contact> contactComboField;
+    public TableColumn<Appointment, String> appointmentTitleColumn;
 
     @FXML
-    public TextField idTextField;
+    public TableColumn<Appointment, String> appointmentDescColumn;
 
     @FXML
-    public TextField titleTextField;
+    public TableColumn<Appointment, String> appointmentLocationColumn;
 
     @FXML
-    public TextField descriptionTextField;
+    public TableColumn<Appointment, Long> appointmentContactColumn;
 
     @FXML
-    public TextField locationTextField;
+    public TableColumn<Appointment, String> appointmentTypeColumn;
 
     @FXML
-    public TextField typeTextField;
+    public TableColumn<Appointment, LocalDateTime> appointmentStartColumn;
 
     @FXML
-    public DatePicker startDateField;
+    public TableColumn<Appointment, LocalDateTime> appointmentEndColumn;
 
     @FXML
-    public TextField startHourTimeField;
+    public TableColumn<Appointment, Long> appointmentCustomerIDColumn;
 
     @FXML
-    public TextField startMinuteTimeField;
+    public TableColumn<Appointment, Long> appointmentUserIDColumn;
+
 
     @FXML
-    public ComboBox<String> startPmAmCombo;
+    public Button addAppointmentButton;
 
     @FXML
-    public DatePicker endDateField;
+    public Button modifyAppointmentButton;
 
     @FXML
-    public TextField endHourTimeField;
+    public Button deleteAppointmentButton;
 
     @FXML
-    public TextField endMinuteTimeField;
+    public TableView<Appointment> appointmentTable;
 
     @FXML
-    public ComboBox<String> endPmAmCombo;
+    public Label upcomingAppointmentsLabel;
 
     @FXML
-    public Button saveButton;
+    public ToggleGroup sortByGroup;
 
     @FXML
-    public Button cancelButton;
+    public RadioButton allSortSelection;
 
-    private final ObservableList<Contact> contacts = ContactDAO.getAllContacts();
+    @FXML
+    public RadioButton monthSortSelection;
 
-    private final ObservableList<Customer> customers = CustomerDAO.getAllCustomers();
+    @FXML
+    public RadioButton weekSortSelection;
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
+    private final ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
 
-    /**
-     * @param url
-     * @param resourceBundle
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        customerComboField.setItems(customers);
-        contactComboField.setItems(contacts);
-        startPmAmCombo.getItems().addAll("PM", "AM");
-        startPmAmCombo.getSelectionModel().select(0);
-        endPmAmCombo.getItems().addAll("PM", "AM");
-        endPmAmCombo.getSelectionModel().select(0);
-
-        numbersOnlyField(startHourTimeField);
-        numbersOnlyField(startMinuteTimeField);
-        numbersOnlyField(endHourTimeField);
-        numbersOnlyField(endMinuteTimeField);
+        handleAppointmentTable();
+        checkAppointments();
     }
 
-    private void numbersOnlyField(TextField someTextField) {
-        someTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                someTextField.setText(newValue.replaceAll("[^\\d]", ""));
-            } else if (someTextField.getText().length() >= 2) {
-                final String substring = someTextField.getText().substring(0, 2);
-                someTextField.setText(substring);
+    /**
+     * Check if Appointment Exist within 15 minutes
+     */
+    private void checkAppointments() {
+        for (final Appointment currentAppointment : appointments) {
+            final LocalDateTime start = currentAppointment.getStart();
+            final LocalDateTime nowDateTimeUTC = LocalDateTime.ofInstant(LocalDateTime.now().toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+            final LocalDateTime startDateTimeUTC = LocalDateTime.ofInstant(start.toInstant(ZoneOffset.UTC), ZoneId.of("UTC"));
+            final long minutesApart = ChronoUnit.MINUTES.between(nowDateTimeUTC, startDateTimeUTC);
+            if (minutesApart <= 15 && minutesApart >= 0) {
+                final String content = start.format(DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a"));
+                String header = "Appointment " + currentAppointment.getAppointmentID() +
+                        " is within 15 minutes. " +
+                        content;
+                upcomingAppointmentsLabel.setText(header);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Open Manage Appointment View
+     * @param event
+     */
+    @FXML
+    public void addAppointmentAction(ActionEvent event) {
+        try {
+            NavigationHelper.appointmentView(event, null);
+        } catch (IOException e) {
+            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Opening Appointment View.", "Please See Developer");
+        }
+    }
+
+    /**
+     * Open Manage Appointment View with selected Appointment
+     * @param event
+     */
+    @FXML
+    public void modifyAppointmentAction(ActionEvent event) {
+        try {
+            final Appointment appointment = Optional.ofNullable(appointmentTable.getSelectionModel().getSelectedItem())
+                    .orElseThrow();
+            NavigationHelper.appointmentView(event, appointment);
+        } catch (NoSuchElementException noSuchElementException) {
+            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Please Select Appointment.");
+        } catch (IOException e) {
+            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Opening Appointment View.", "Please See Developer");
+        }
+    }
+
+    /**
+     * Delete Appointment using selected Appointment
+     * @param event
+     */
+    @FXML
+    public void deleteAppointmentAction(ActionEvent event) {
+        try {
+            Appointment appointment = Optional.of(appointmentTable.getSelectionModel().getSelectedItem())
+                    .orElseThrow();
+
+            Alert alert = displayAlert(Alert.AlertType.CONFIRMATION,
+                    "Delete Appointment",
+                    "Are you sure you want to delete this appointment?",
+                    "Press OK to delete the appointment. \nPress Cancel to cancel the deletion.");
+
+            if (alert.getResult() == ButtonType.OK) {
+                final boolean appointmentRemoved = AppointmentDAO.removeAppointment(appointment);
+                if (appointmentRemoved) {
+                    appointments.remove(appointment);
+                    if (monthSortSelection.isSelected()) {
+                        appointmentTable.setItems(sortAppointmentsByThisMonth());
+                    } else if (weekSortSelection.isSelected()) {
+                        appointmentTable.setItems(sortAppointmentsByThisWeek());
+                    }
+                } else {
+                    displayAlert(Alert.AlertType.ERROR,
+                            "Appointment Deletion Error",
+                            "The appointment was NOT deleted.",
+                            "Please try again.");
+                }
+            }
+
+        } catch (Exception e) {
+            displayAlert(Alert.AlertType.ERROR,
+                    "Appointment Deletion Error",
+                    "The appointment was NOT selected.",
+                    "Please try select appointment.");
+        }
+    }
+
+    @FXML
+    public void backAction(ActionEvent event) {
+        try {
+            NavigationHelper.homeView(event);
+        } catch (IOException e) {
+            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Opening Appointment View.", "Please See Developer");
+        }
+    }
+
+    private void handleAppointmentTable() {
+        appointmentTable.setItems(appointments);
+        appointmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        appointmentTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        appointmentLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+
+        appointmentStartColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        appointmentStartColumn.setCellFactory(LocalDateTimeHelper::dateTimeCell);
+
+        appointmentEndColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        appointmentEndColumn.setCellFactory(LocalDateTimeHelper::dateTimeCell);
+
+        appointmentCustomerIDColumn.setCellValueFactory(value -> {
+            long customerID = value.getValue().getCustomer().getCustomerID();
+            return new ReadOnlyObjectWrapper<>(customerID);
+        });
+
+        appointmentUserIDColumn.setCellValueFactory(value -> {
+            long userID = value.getValue().getUser().getUserID();
+            return new ReadOnlyObjectWrapper<>(userID);
+        });
+
+        appointmentContactColumn.setCellValueFactory(value -> {
+            long contactID = value.getValue().getContact().getContactID();
+            return new ReadOnlyObjectWrapper<>(contactID);
+        });
+
+        sortByGroup.selectedToggleProperty().addListener((observableValue) -> {
+            if (allSortSelection.isSelected()) {
+                appointmentTable.setItems(appointments);
+            } else if (monthSortSelection.isSelected()) {
+                appointmentTable.setItems(sortAppointmentsByThisMonth());
+            } else if (weekSortSelection.isSelected()) {
+                appointmentTable.setItems(sortAppointmentsByThisWeek());
             }
         });
     }
 
     /**
-     * Save Appointment.
-     * @param event
+     * Sorts Appointments using Lambda Expressing.
+     * Lambda - ...
+     * Reasoning - Decreased code footprint and Increased code readability.
+     * @return Observable List of Appointments
      */
-    @FXML
-    private void saveAction(ActionEvent event) {
-        final boolean updatingAppointment = !idTextField.getText().isEmpty();
-        try {
-            // Start Date Time
-            final LocalDateTime startLocalDateTime = createLocalDateTime(startDateField.getValue(), startHourTimeField.getText(),
-                    startMinuteTimeField.getText(), startPmAmCombo.getSelectionModel().getSelectedItem());
-
-            // End Date Time
-            final LocalDateTime endLocalDateTime = createLocalDateTime(endDateField.getValue(), endHourTimeField.getText(),
-                    endMinuteTimeField.getText(), endPmAmCombo.getSelectionModel().getSelectedItem());
-
-
-            // Appointment
-            final Appointment appointment = new Appointment();
-            appointment.setTitle(titleTextField.getText());
-            appointment.setDescription(descriptionTextField.getText());
-            appointment.setLocation(locationTextField.getText());
-            appointment.setType(typeTextField.getText());
-            appointment.setStart(startLocalDateTime);
-            appointment.setEnd(endLocalDateTime);
-            appointment.setCustomer(customerComboField.getValue());
-            appointment.setContact(contactComboField.getValue());
-            appointment.setUser(UserDAO.getCurrentUser());
-
-            if (updatingAppointment) {
-                appointment.setAppointmentID(Long.parseLong(idTextField.getText()));
-            }
-
-            appointment.validate();
-
-
-            if (updatingAppointment) {
-                AppointmentDAO.updateAppointment(appointment);
-            } else {
-                AppointmentDAO.addAppointment(appointment);
-            }
-
-            cancelAction(event);
-        } catch (InvalidAppointmentException e) {
-            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error", "Please Address Error", e.getMessage());
-        }
+    public ObservableList<Appointment> sortAppointmentsByThisMonth() {
+        final LocalDateTime now = LocalDateTime.now();
+        return this.appointments.stream().filter(appointment -> {
+            final LocalDateTime start = appointment.getStart();
+            return start.getMonth() == now.getMonth();
+        }).collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
     /**
-     * Navigate to Main View.
-     * @param event
+     * Sorts Appointments using Lambda Expressing.
+     * Reasoning - Decreased code footprint and Increased code readability
+     * @return Observable List of Appointments
      */
-    @FXML
-    private void cancelAction(ActionEvent event) {
-        try {
-            NavigationHelper.mainView(event);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Load Appointment View Controller using Appointment.
-     * @param appointment
-     */
-    public void loadAppointment(Appointment appointment) {
-        customerComboField.getSelectionModel().select(appointment.getCustomer());
-        contactComboField.getSelectionModel().select(appointment.getContact());
-        idTextField.setText(String.valueOf(appointment.getAppointmentID()));
-        titleTextField.setText(appointment.getTitle());
-        descriptionTextField.setText(appointment.getDescription());
-        locationTextField.setText(appointment.getLocation());
-        typeTextField.setText(appointment.getType());
-
-        startDateField.setValue(appointment.getStart().toLocalDate());
-        endDateField.setValue(appointment.getEnd().toLocalDate());
-
-        startHourTimeField.setText(LocalDateTimeHelper.get12Hour(appointment.getStart()));
-        startMinuteTimeField.setText(LocalDateTimeHelper.get12Minute(appointment.getStart()));
-        startPmAmCombo.getSelectionModel().select(LocalDateTimeHelper.get12AMPM(appointment.getStart()).toUpperCase());
-
-        endHourTimeField.setText(LocalDateTimeHelper.get12Hour(appointment.getEnd()));
-        endMinuteTimeField.setText(LocalDateTimeHelper.get12Minute(appointment.getEnd()));
-        endPmAmCombo.getSelectionModel().select(LocalDateTimeHelper.get12AMPM(appointment.getEnd()).toUpperCase());
-    }
-
-    /**
-     * Create LocalDateTime from hour, minute, and pmAM.
-     * @param localDate
-     * @param hour
-     * @param minute
-     * @param pmAM
-     * @return LocalDateTime
-     * @throws InvalidAppointmentException
-     */
-    private LocalDateTime createLocalDateTime(LocalDate localDate, String hour, String minute, String pmAM) throws InvalidAppointmentException {
-        try {
-            final String localDateTime = localDate.toString() + " " + hour + ":" + minute + " " + pmAM;
-            return LocalDateTime.parse(localDateTime, dateTimeFormatter);
-        } catch (Exception e) {
-            throw new InvalidAppointmentException("Missing Date(s)");
-        }
+    private ObservableList<Appointment> sortAppointmentsByThisWeek() {
+        final LocalDate now = LocalDate.now();
+        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        final int nowWeekOfYear = now.get(woy);
+        return this.appointments.stream().filter(appointment -> {
+            final LocalDateTime start = appointment.getStart();
+            final LocalDate startLocal = LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth());
+            final int startWeekOrYear = startLocal.get(woy);
+            return nowWeekOfYear == startWeekOrYear;
+        }).collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 }

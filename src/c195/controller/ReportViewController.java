@@ -12,10 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
@@ -127,13 +124,13 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Navigates to Main View
+     * Navigates to Preview View
      * @param event
      */
     @FXML
-    private void mainScreen(ActionEvent event) {
+    private void backButtonAction(ActionEvent event) {
         try {
-            NavigationHelper.mainView(event);
+            NavigationHelper.homeView(event);
         } catch (IOException e) {
             ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Navigating To Main View");
         }
@@ -223,8 +220,21 @@ public class ReportViewController implements Initializable {
     public void locationResetAction(ActionEvent event) {
         locationsTable.setItems(FXCollections.emptyObservableList());
         locationSectionMonthComboBox.setPromptText("Month");
+        locationSectionMonthComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText("Month");
+            }
+        });
         locationSectionComboBox.setPromptText("Location");
-        handleLocationSectionComboBoxes();
+        locationSectionComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText("Location");
+            }
+        });
     }
 
     private void handleTypeSectionTable() {
@@ -313,7 +323,21 @@ public class ReportViewController implements Initializable {
     public void typeResetAction(ActionEvent event) {
         typesTable.setItems(FXCollections.emptyObservableList());
         typeSectionTypeComboBox.setPromptText("Type");
+        typeSectionTypeComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText("Type");
+            }
+        });
         typeSectionMonthComboBox.setPromptText("Month");
+        typeSectionMonthComboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText("Month");
+            }
+        });
         handleTypeSectionComboBoxes();
     }
 
@@ -364,6 +388,13 @@ public class ReportViewController implements Initializable {
         appointmentTable.setItems(appointments);
         appointmentCustomerComboBox.setPromptText("Customer");
         appointmentCustomerComboBox.getSelectionModel().clearSelection();
+        appointmentCustomerComboBox.setButtonCell(new ListCell<Customer>() {
+            @Override
+            protected void updateItem(Customer item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText("Customer");
+            }
+        });
     }
 
     private <T> Function<T, String> uppercaseFirstLetter() {

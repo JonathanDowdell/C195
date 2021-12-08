@@ -1,192 +1,154 @@
 package c195.controller;
 
-import c195.dao.CountryDAO;
+import c195.dao.AppointmentDAO;
 import c195.dao.CustomerDAO;
-import c195.dao.FirstLevelDivisionDAO;
-import c195.dao.UserDAO;
-import c195.model.Country;
 import c195.model.Customer;
-import c195.model.FirstLevelDivision;
-import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
-/**
- * @author Jonathan Dowdell
- */
+import static c195.util.ModalHelper.displayAlert;
+
 public class ManageCustomerViewController implements Initializable {
-    public TextField idTextField;
-    public TextField nameTextField;
-    public TextField addressTextField;
-    public ComboBox<Country> countryComboField;
-    public ComboBox<FirstLevelDivision> stateProvinceComboField;
-    public TextField postalCodeTextField;
-    public TextField phoneNumberTextField;
-    private boolean update = false;
 
-    /**
-     * @param url
-     * @param resourceBundle
-     */
+    @FXML
+    public TableColumn<Customer, Long> customerIDColumn;
+
+    @FXML
+    public TableColumn<Customer, String> customerNameColumn;
+
+    @FXML
+    public TableColumn<Customer, Long> customerDivisionIDColumn;
+
+    @FXML
+    public TableColumn<Customer, String> customerAddressColumn;
+
+    @FXML
+    public TableColumn<Customer, String> customerPostalCodeColumn;
+
+    @FXML
+    public TableColumn<Customer, String> customerPhoneColumn;
+
+    @FXML
+    public Button addCustomerButton;
+
+    @FXML
+    public Button modifyCustomerButton;
+
+    @FXML
+    public Button deleteCustomerButton;
+
+    @FXML
+    public Button backButton;
+
+    @FXML
+    public TableView<Customer> customerTable;
+
+    private final ObservableList<Customer> customers = CustomerDAO.getAllCustomers();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        handleComboBox();
+        handleCustomerTable();
+    }
+
+    private void handleCustomerTable() {
+        customerTable.setItems(customers);
+        customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerDivisionIDColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getDivisionID()));
+        customerAddressColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getAddress()));
+        customerPhoneColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getPhone()));
+        customerPostalCodeColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getPostalCode()));
     }
 
     /**
-     * Load Manage Customer View using Customer.
-     * @param customer
-     */
-    public void loadCustomer(Customer customer) {
-        FirstLevelDivision division = customer.getDivision();
-        Country country = division.getCountry();
-        idTextField.setText(String.valueOf(customer.getCustomerID()));
-        nameTextField.setText(customer.getCustomerName());
-        addressTextField.setText(customer.getAddress());
-        countryComboField.getSelectionModel().select(country);
-        stateProvinceComboField.getSelectionModel().select(division);
-        postalCodeTextField.setText(customer.getPostalCode());
-        phoneNumberTextField.setText(customer.getPhone());
-        update = true;
-    }
-
-    /**
-     * Save Customer
-     * @param actionEvent
+     * Opens Manage Customer View
      */
     @FXML
-    private void saveCustomerAction(ActionEvent actionEvent) {
-        String name = nameTextField.getText();
-        String address = addressTextField.getText();
-        FirstLevelDivision firstLevelDivision = stateProvinceComboField.getSelectionModel().getSelectedItem();
-        String postalCode = postalCodeTextField.getText();
-        String phoneNumber = phoneNumberTextField.getText();
-        boolean results = false;
-        boolean validFields = validFields();
-
-        if (!update && validFields) {
-            // Create New
-            Customer customer = joinFieldsToCustomer(-1, name, address, firstLevelDivision, postalCode, phoneNumber);
-            results = CustomerDAO.addCustomer(customer);
-        } else if (validFields) {
-            // Update
-            long customerID = Long.parseLong(idTextField.getText());
-            Customer customer = joinFieldsToCustomer(customerID, name, address, firstLevelDivision, postalCode, phoneNumber);
-            results = CustomerDAO.updateCustomer(customer);
-        }
-
-        if (!results && validFields) {
-            String saveOrUpdate = update ? "Update" : "Save";
-            ModalHelper.displayAlert(Alert.AlertType.ERROR,  saveOrUpdate + " Error",
-                    "Unable to " + saveOrUpdate + " Customer", "Please check with Developer");
-        } else if (results) {
-            cancelAction(actionEvent);
-        }
-    }
-
-    /**
-     * Join TextFields to create Customer.
-     * @param customerID
-     * @param name
-     * @param address
-     * @param firstLevelDivision
-     * @param postalCode
-     * @param phoneNumber
-     * @return
-     */
-    private Customer joinFieldsToCustomer(long customerID, String name, String address, FirstLevelDivision firstLevelDivision, String postalCode, String phoneNumber) {
-        Customer customer = new Customer();
-        customer.setCustomerID(customerID);
-        customer.setCustomerName(name);
-        customer.setAddress(address);
-        customer.setDivision(firstLevelDivision);
-        customer.setPostalCode(postalCode);
-        customer.setPhone(phoneNumber);
-        customer.setLastUpdate(LocalDateTime.now());
-        customer.setLastUpdatedBy(UserDAO.getCurrentUser().getUsername());
-        return customer;
-    }
-
-    /**
-     * Navigate to Main View
-     * @param actionEvent
-     */
-    @FXML
-    private void cancelAction(ActionEvent actionEvent) {
+    private void addCustomerAction(ActionEvent actionEvent) {
         try {
-            NavigationHelper.mainView(actionEvent);
+            NavigationHelper.customerView(actionEvent, null);
         } catch (IOException e) {
+            // TODO: 11/17/2021 Handle Error
             e.printStackTrace();
-            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error Navigating to Main View");
         }
     }
 
     /**
-     * Validates Input Fields.
-     * @return boolean
+     * Open Manage Customer View with selected customer
      */
-    private boolean validFields() {
-        ArrayList<String> errorFields = new ArrayList<>();
-        boolean emptyName = nameTextField.getText().isEmpty();
-        if (emptyName) {
-            errorFields.add("Name Empty");
+    @FXML
+    private void updateCustomerAction(ActionEvent actionEvent) {
+        Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        if (selectedCustomer == null) {
+            displayAlert(Alert.AlertType.INFORMATION, "Customer not selected.", "Please select customer.");
+        } else {
+            try {
+                NavigationHelper.customerView(actionEvent, selectedCustomer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        boolean emptyAddress = addressTextField.getText().isEmpty();
-        if (emptyAddress) {
-            errorFields.add("Address Empty");
-        }
-
-        Country country = countryComboField.getSelectionModel().getSelectedItem();
-        if (country == null) {
-            errorFields.add("Country not selected");
-        }
-
-        FirstLevelDivision firstLevelDivision = stateProvinceComboField.getSelectionModel().getSelectedItem();
-        if (firstLevelDivision == null) {
-            errorFields.add("State / Province not Selected");
-        }
-
-        boolean emptyPostalCode = postalCodeTextField.getText().isEmpty();
-        if (emptyPostalCode) {
-            errorFields.add("Postal Code Empty");
-        }
-
-        boolean emptyPhone = phoneNumberTextField.getText().isEmpty();
-        if (emptyPhone) {
-            errorFields.add("Phone Number Empty");
-        }
-
-        if (!errorFields.isEmpty()) {
-            String errorMessages = errorFields.stream().map(error -> error + "\n").collect(Collectors.joining());
-            ModalHelper.displayAlert(Alert.AlertType.ERROR, "Error", "Please Address Error(s)", errorMessages);
-        }
-
-        return errorFields.isEmpty();
     }
 
-    private void handleComboBox() {
-        countryComboField.setItems(CountryDAO.getAllCountries());
+    /**
+     * Delete customer using selected customer
+     */
+    @FXML
+    private void deleteCustomerAction() {
+        try {
+            Customer customer = Optional.of(customerTable.getSelectionModel().getSelectedItem())
+                    .orElseThrow();
 
-        countryComboField.setOnAction(actionEvent -> {
-            Country selectedCountry = countryComboField.getSelectionModel().getSelectedItem();
-            ObservableList<FirstLevelDivision> firstLevelDivisions = FirstLevelDivisionDAO.getByCountryID(selectedCountry.getCountryID());
-            stateProvinceComboField.setItems(firstLevelDivisions);
-        });
+            if (!AppointmentDAO.getAppointmentByCustomer(customer).isEmpty()) {
+                displayAlert(Alert.AlertType.ERROR, "Deletion Error",
+                        "Customer still has Appointment(s)",
+                        "Please delete Appointment(s) first.");
+                return;
+            }
+
+            Alert alert = displayAlert(Alert.AlertType.CONFIRMATION,
+                    "Delete Product",
+                    "Are you sure you want to delete this product?",
+                    "Press OK to delete the product. \nPress Cancel to cancel the deletion.");
+
+            if (alert.getResult() == ButtonType.OK) {
+                boolean customerRemoved = CustomerDAO.removeCustomer(customer);
+                if (customerRemoved) {
+                    customers.remove(customer);
+                } else {
+                    displayAlert(Alert.AlertType.ERROR,
+                            "Product Deletion Error",
+                            "The product was NOT deleted.",
+                            "Please try again.");
+                }
+            }
+
+        } catch (Exception e) {
+            displayAlert(Alert.AlertType.ERROR,
+                    "Product Deletion Error",
+                    "The product was NOT deleted.",
+                    "Please select a product to delete.");
+        }
     }
 
-
+    @FXML
+    public void backAction(ActionEvent event) {
+        try {
+            NavigationHelper.homeView(event);
+        } catch (IOException e) {
+            // TODO: 11/17/2021 Handle Error
+            e.printStackTrace();
+        }
+    }
 }

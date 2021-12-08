@@ -1,8 +1,8 @@
 package c195.util;
 
 import c195.Main;
-import c195.controller.ManageAppointmentViewController;
-import c195.controller.ManageCustomerViewController;
+import c195.controller.AppointmentViewController;
+import c195.controller.CustomerViewController;
 import c195.model.Appointment;
 import c195.model.Customer;
 import javafx.event.ActionEvent;
@@ -22,12 +22,30 @@ import java.io.IOException;
 public class NavigationHelper {
 
     /**
-     * Navigate to MainView.
+     * Navigate to Home View.
      * @param event
      * @throws IOException
      */
-    public static void mainView(ActionEvent event) throws IOException {
-        navigator(event, "view/main-view.fxml");
+    public static void homeView(ActionEvent event) throws IOException {
+        navigator(event, "view/home-view.fxml");
+    }
+
+    /**
+     * Navigate to Manage Appointment View.
+     * @param event
+     * @throws IOException
+     */
+    public static void manageAppointmentView(ActionEvent event) throws IOException {
+        navigator(event, "view/manage-appointment-view.fxml");
+    }
+
+    /**
+     * Navigate to Manage Customer View.
+     * @param event
+     * @throws IOException
+     */
+    public static void manageCustomerView(ActionEvent event) throws IOException {
+        navigator(event, "view/manage-customer-view.fxml");
     }
 
     /**
@@ -37,11 +55,11 @@ public class NavigationHelper {
      * @throws IOException
      */
     public static void customerView(ActionEvent event, Customer customer) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/manage-customer-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/customer-view.fxml"));
         Parent parent = fxmlLoader.load();
         if (customer != null) {
-            ManageCustomerViewController manageCustomerViewController = fxmlLoader.getController();
-            manageCustomerViewController.loadCustomer(customer);
+            CustomerViewController customerViewController = fxmlLoader.getController();
+            customerViewController.loadCustomer(customer);
         }
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -58,12 +76,12 @@ public class NavigationHelper {
      * @param appointment
      * @throws IOException
      */
-    public static void manageAppointmentView(ActionEvent event, Appointment appointment) throws IOException {
-        final FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/manage-appointment-view.fxml"));
+    public static void appointmentView(ActionEvent event, Appointment appointment) throws IOException {
+        final FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/appointment-view.fxml"));
         Parent parent = fxmlLoader.load();
         if (appointment != null) {
-            ManageAppointmentViewController manageAppointmentViewController = fxmlLoader.getController();
-            manageAppointmentViewController.loadAppointment(appointment);
+            AppointmentViewController appointmentViewController = fxmlLoader.getController();
+            appointmentViewController.loadAppointment(appointment);
         }
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

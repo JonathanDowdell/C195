@@ -2,69 +2,51 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="367.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195.controller.ManageCustomerViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c195.controller.ManageCustomerViewController">
    <children>
-      <Label fx:id="titleLabel" text="Manage Customer">
-         <font>
-            <Font size="30.0" />
-         </font>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
+      <VBox prefHeight="538.0" prefWidth="450.0" spacing="10.0">
+         <children>
+            <Label text="Manage Customers">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <TableView fx:id="customerTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="customerIDColumn" prefWidth="29.0" text="ID" />
+                  <TableColumn fx:id="customerNameColumn" prefWidth="100.0" text="Name" />
+                  <TableColumn fx:id="customerDivisionIDColumn" prefWidth="73.0" text="Division ID" />
+                  <TableColumn fx:id="customerAddressColumn" prefWidth="98.0" text="Address" />
+                  <TableColumn fx:id="customerPostalCodeColumn" prefWidth="75.0" text="Postal Code" />
+                  <TableColumn fx:id="customerPhoneColumn" prefWidth="75.0" text="Phone" />
+               </columns>
+            </TableView>
+            <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="344.0" spacing="10.0">
+               <children>
+                  <Button fx:id="addCustomerButton" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#addCustomerAction" text="Add" />
+                  <Button fx:id="modifyCustomerButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#updateCustomerAction" text="Modify" />
+                  <Button fx:id="deleteCustomerButton" layoutX="255.0" layoutY="48.0" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" onAction="#deleteCustomerAction" text="Delete" />
+               </children>
+            </HBox>
+         </children>
          <padding>
-            <Insets bottom="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
-      </Label>
-      <TextField fx:id="idTextField" disable="true" editable="false" layoutX="40.0" layoutY="232.0" prefHeight="32.0" promptText="Auto Generated ID" />
-      <TextField fx:id="nameTextField" prefHeight="32.0" promptText="Name" />
-      <TextField fx:id="addressTextField" layoutX="40.0" layoutY="219.0" prefHeight="32.0" promptText="Address" />
-      <HBox alignment="CENTER" minHeight="32.0" prefHeight="32.0" prefWidth="288.0" spacing="10.0">
+      </VBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <AnchorPane layoutX="151.0" layoutY="10.0" prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ComboBox fx:id="countryComboField" prefHeight="32.0" prefWidth="150.0" promptText="Country" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="32.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ComboBox fx:id="stateProvinceComboField" layoutX="8.0" layoutY="1.0" prefHeight="32.0" prefWidth="150.0" promptText="State / Province" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
+            <Button onAction="#backAction" minHeight="32.0" minWidth="56.0" mnemonicParsing="false" text="Back" />
          </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutX="40.0" layoutY="256.0" prefHeight="27.0" prefWidth="288.0" spacing="10.0">
-         <children>
-            <TextField fx:id="postalCodeTextField" minHeight="32.0" prefHeight="32.0" promptText="Postal Code" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="phoneNumberTextField" layoutX="74.0" layoutY="11.0" minHeight="32.0" prefHeight="32.0" promptText="Phone Number" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutX="40.0" layoutY="305.0" prefHeight="27.0" prefWidth="288.0" spacing="10.0">
-         <children>
-            <Button onAction="#saveCustomerAction" mnemonicParsing="false" text="Save">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button onAction="#cancelAction" layoutX="131.0" layoutY="11.0" mnemonicParsing="false" text="Cancel">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-         </children>
-         <VBox.margin>
-            <Insets top="15.0" />
-         </VBox.margin>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
       </HBox>
    </children>
-   <padding>
-      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-   </padding>
 </VBox>

@@ -7,10 +7,7 @@ import c195.util.NavigationHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +28,7 @@ public class LoginViewController implements Initializable {
     public TextField userIDTextField;
 
     @FXML
-    public TextField passwordTextField;
+    public PasswordField passwordTextField;
 
     @FXML
     public Label zoneIDLabel;
@@ -72,7 +69,7 @@ public class LoginViewController implements Initializable {
         Logger.log(userID, validUser, "Login Attempt");
         if (validUser) {
             System.out.println("Logged In");
-            NavigationHelper.mainView(event);
+            NavigationHelper.homeView(event);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(alertTitle);

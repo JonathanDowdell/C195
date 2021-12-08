@@ -123,15 +123,15 @@
                 </TabPane>
             </children>
         </VBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="869.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="869.0">
          <children>
-            <Button minHeight="32.0" mnemonicParsing="false" onAction="#mainScreen" text="Back" />
+            <Button minHeight="32.0" mnemonicParsing="false" onAction="#backButtonAction" text="Back" />
          </children>
          <VBox.margin>
             <Insets />
          </VBox.margin>
          <padding>
-            <Insets right="15.0" />
+            <Insets left="15.0" right="15.0" />
          </padding>
       </HBox>
     </children>
