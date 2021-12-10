@@ -1,9 +1,8 @@
 package c195.controller;
 
 import c195.dao.AppointmentDAO;
-import c195.dao.CustomerDAO;
 import c195.model.Appointment;
-import c195.model.Customer;
+import c195.model.Contact;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -37,6 +36,15 @@ public class ReportViewController implements Initializable {
 
     @FXML
     public ComboBox<String> typeSectionTypeComboBox;
+
+    @FXML
+    public Label typeCountLoadingLabel;
+
+    @FXML
+    public Label contactLoadingLabel;
+
+    @FXML
+    public Label locationLoadingLabel;
 
     @FXML
     public TableColumn<Appointment, String> typeSectionMonthColumn;
@@ -102,21 +110,21 @@ public class ReportViewController implements Initializable {
     public TableColumn<Appointment, Long> appointmentUserIDColumn;
 
     @FXML
-    public ComboBox<Customer> appointmentCustomerComboBox;
+    public ComboBox<Contact> appointmentContactComboBox;
 
-    private final ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
 
-    private final ObservableList<Customer> customer = CustomerDAO.getAllCustomers();
+    private ObservableList<Appointment> appointments = AppointmentDAO.getAllAppointments();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        handleAppointmentByCustomerTable();
-
-        handleAppointmentByCustomerComboBox();
-
         handleTypeSectionTable();
 
         handleTypeSectionComboBoxes();
+
+        handleAppointmentByContactTable();
+
+        handleAppointmentByContactComboBox();
 
         handleLocationSectionTable();
 
@@ -124,7 +132,7 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Navigates to Preview View
+     * Navigates to Preview View.
      * @param event
      */
     @FXML
@@ -182,11 +190,10 @@ public class ReportViewController implements Initializable {
     }
 
     /**
-     * Generate Location Section By Fields
-     * @param event
+     * Generate Location Section By Fields.
      */
     @FXML
-    public void locationSectionGenerateAction(ActionEvent event) {
+    public void locationSectionGenerateAction() {
         final ObservableList<Appointment> filteredMonthAppointments = appointments.stream()
                 .filter(appointment -> {
                     final String month = locationSectionMonthComboBox.getSelectionModel().getSelectedItem();
@@ -209,30 +216,47 @@ public class ReportViewController implements Initializable {
                 .filter(distinctByKey(Appointment::getLocation))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
+        if (filteredTypeAppointments.isEmpty()) {
+            locationLoadingLabel.setText("No Results");
+        } else {
+            locationLoadingLabel.setText("");
+        }
+
         locationsTable.setItems(filteredTypeAppointments);
     }
 
     /**
-     * Resets Fields
-     * @param event
+     * Resets Fields.
      */
     @FXML
-    public void locationResetAction(ActionEvent event) {
+    public void locationClearAction() {
+        locationLoadingLabel.setText("");
         locationsTable.setItems(FXCollections.emptyObservableList());
         locationSectionMonthComboBox.setPromptText("Month");
-        locationSectionMonthComboBox.setButtonCell(new ListCell<String>() {
+        locationSectionMonthComboBox.getSelectionModel().clearSelection();
+        locationSectionMonthComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText("Month");
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Month");
+                } else {
+                    setText(item);
+                }
             }
         });
+
         locationSectionComboBox.setPromptText("Location");
-        locationSectionComboBox.setButtonCell(new ListCell<String>() {
+        locationSectionComboBox.getSelectionModel().clearSelection();
+        locationSectionComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText("Location");
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Location");
+                } else {
+                    setText(item);
+                }
             }
         });
     }
@@ -273,7 +297,6 @@ public class ReportViewController implements Initializable {
                 .map(uppercaseFirstLetter())
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         typeSectionMonthComboBox.setItems(months);
-        typeSectionMonthComboBox.getSelectionModel().clearSelection();
 
         final ObservableList<String> types = appointments.stream()
                 .map(Appointment::getType)
@@ -281,15 +304,13 @@ public class ReportViewController implements Initializable {
                 .distinct()
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         typeSectionTypeComboBox.setItems(types);
-        typeSectionTypeComboBox.getSelectionModel().clearSelection();
     }
 
     /**
      * Generate Type By Fields.
-     * @param event
      */
     @FXML
-    public void typeSectionGenerateAction(ActionEvent event) {
+    public void typeSectionGenerateAction() {
         final ObservableList<Appointment> filteredMonthAppointments = appointments.stream()
                 .filter(appointment -> {
                     final String month = typeSectionMonthComboBox.getSelectionModel().getSelectedItem();
@@ -312,37 +333,53 @@ public class ReportViewController implements Initializable {
                 .filter(distinctByKey(Appointment::getType))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
+        if (filteredTypeAppointments.isEmpty()) {
+            typeCountLoadingLabel.setText("No Results");
+        } else {
+            typeCountLoadingLabel.setText("");
+        }
+
         typesTable.setItems(filteredTypeAppointments);
     }
 
     /**
      * Resets Type Section.
-     * @param event
      */
     @FXML
-    public void typeResetAction(ActionEvent event) {
+    public void typeClearAction() {
         typesTable.setItems(FXCollections.emptyObservableList());
-        typeSectionTypeComboBox.setPromptText("Type");
-        typeSectionTypeComboBox.setButtonCell(new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText("Type");
-            }
-        });
+
+        typeCountLoadingLabel.setText("");
         typeSectionMonthComboBox.setPromptText("Month");
-        typeSectionMonthComboBox.setButtonCell(new ListCell<String>() {
+        typeSectionMonthComboBox.getSelectionModel().clearSelection();
+        typeSectionMonthComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText("Month");
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Month");
+                } else {
+                    setText(item);
+                }
             }
         });
-        handleTypeSectionComboBoxes();
+
+        typeSectionTypeComboBox.setPromptText("Type");
+        typeSectionTypeComboBox.getSelectionModel().clearSelection();
+        typeSectionTypeComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Type");
+                } else {
+                    setText(item);
+                }
+            }
+        });
     }
 
-    private void handleAppointmentByCustomerTable() {
-        appointmentTable.setItems(appointments);
+    private void handleAppointmentByContactTable() {
         appointmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         appointmentTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         appointmentDescColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -367,32 +404,40 @@ public class ReportViewController implements Initializable {
         });
     }
 
-    private void handleAppointmentByCustomerComboBox() {
-        appointmentCustomerComboBox.setItems(customer);
-        appointmentCustomerComboBox.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+    private void handleAppointmentByContactComboBox() {
+        ObservableList<Contact> contacts = appointments.stream().map(Appointment::getContact)
+                .distinct()
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        appointmentContactComboBox.setItems(contacts);
+        appointmentContactComboBox.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue != null) {
                 final ObservableList<Appointment> filteredAppointments = appointments.stream()
-                        .filter(appointment -> appointment.getCustomer().getCustomerID() == newValue.getCustomerID())
+                        .filter(appointment -> appointment.getContact().getContactID() == newValue.getContactID())
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                if (filteredAppointments.isEmpty()) {
+                    contactLoadingLabel.setText("No Results");
+                } else {
+                    contactLoadingLabel.setText("");
+                }
                 appointmentTable.setItems(filteredAppointments);
             }
         });
     }
 
     /**
-     * Resets Customer Appointment Section.
-     * @param event
+     * Clear Customer Appointment Section.
      */
     @FXML
-    public void customerAppointmentResetAction(ActionEvent event) {
-        appointmentTable.setItems(appointments);
-        appointmentCustomerComboBox.setPromptText("Customer");
-        appointmentCustomerComboBox.getSelectionModel().clearSelection();
-        appointmentCustomerComboBox.setButtonCell(new ListCell<Customer>() {
+    public void contactAppointmentClearAction() {
+        contactLoadingLabel.setText("");
+        appointmentTable.setItems(FXCollections.emptyObservableList());
+        appointmentContactComboBox.setPromptText("Contact");
+        appointmentContactComboBox.getSelectionModel().clearSelection();
+        appointmentContactComboBox.setButtonCell(new ListCell<>() {
             @Override
-            protected void updateItem(Customer item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText("Customer");
+            protected void updateItem(Contact item, boolean empty) {
+                super.updateItem(item, empty);
+                setText("Contact");
             }
         });
     }

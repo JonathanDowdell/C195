@@ -15,6 +15,6 @@
       </Label>
       <Button onAction="#navigateToAppointmentView" minHeight="32.0" minWidth="150.0" mnemonicParsing="false" text="Manage Appointments" />
       <Button onAction="#navigateToCustomerView" layoutX="241.0" layoutY="194.0" minHeight="32.0" minWidth="150.0" mnemonicParsing="false" text="Manage Customers" />
-      <Button onAction="#navigateToReportView" layoutX="251.0" layoutY="210.0" minHeight="32.0" minWidth="150.0" mnemonicParsing="false" text="View Reports" />
+      <Button fx:id="reportButton" onAction="#navigateToReportView" layoutX="251.0" layoutY="210.0" minHeight="32.0" minWidth="150.0" mnemonicParsing="false" text="View Reports" />
    </children>
 </VBox>

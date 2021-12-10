@@ -2,7 +2,9 @@ package c195.controller;
 
 import c195.dao.AppointmentDAO;
 import c195.dao.CustomerDAO;
+import c195.model.Contact;
 import c195.model.Customer;
+import c195.model.FirstLevelDivision;
 import c195.util.NavigationHelper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
@@ -11,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +31,10 @@ public class ManageCustomerViewController implements Initializable {
     public TableColumn<Customer, String> customerNameColumn;
 
     @FXML
-    public TableColumn<Customer, Long> customerDivisionIDColumn;
+    public TableColumn<Customer, String> customerDivisionNameColumn;
+
+    @FXML
+    public TableColumn<Customer, String> customerCountryColumn;
 
     @FXML
     public TableColumn<Customer, String> customerAddressColumn;
@@ -49,9 +55,6 @@ public class ManageCustomerViewController implements Initializable {
     public Button deleteCustomerButton;
 
     @FXML
-    public Button backButton;
-
-    @FXML
     public TableView<Customer> customerTable;
 
     private final ObservableList<Customer> customers = CustomerDAO.getAllCustomers();
@@ -65,14 +68,15 @@ public class ManageCustomerViewController implements Initializable {
         customerTable.setItems(customers);
         customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        customerDivisionIDColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getDivisionID()));
+        customerDivisionNameColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getDivision()));
+        customerCountryColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getDivision().getCountry().getCountry()));
         customerAddressColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getAddress()));
         customerPhoneColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getPhone()));
         customerPostalCodeColumn.setCellValueFactory(value -> new ReadOnlyObjectWrapper<>(value.getValue().getPostalCode()));
     }
 
     /**
-     * Opens Manage Customer View
+     * Opens Manage Customer View.
      */
     @FXML
     private void addCustomerAction(ActionEvent actionEvent) {
@@ -85,7 +89,7 @@ public class ManageCustomerViewController implements Initializable {
     }
 
     /**
-     * Open Manage Customer View with selected customer
+     * Open Manage Customer View with selected customer.
      */
     @FXML
     private void updateCustomerAction(ActionEvent actionEvent) {
@@ -102,7 +106,7 @@ public class ManageCustomerViewController implements Initializable {
     }
 
     /**
-     * Delete customer using selected customer
+     * Delete customer using selected customer.
      */
     @FXML
     private void deleteCustomerAction() {

@@ -11,9 +11,9 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 
 /**
  * View Controller for Login View
@@ -36,6 +36,12 @@ public class LoginViewController implements Initializable {
     @FXML
     public Button signInButton;
 
+    @FXML
+    public Label usernameLabel;
+
+    @FXML
+    public Label passwordLabel;
+
     private String alertTitle;
     private String alertHeader;
     private String alertContext;
@@ -47,7 +53,9 @@ public class LoginViewController implements Initializable {
         String username = resourceBundle.getString("username");
         String password = resourceBundle.getString("password");
         titleLabel.setText(resourceBundle.getString("title"));
-        final String displayName = TimeZone.getDefault().getDisplayName();
+        usernameLabel.setText(username);
+        passwordLabel.setText(password);
+        String displayName = ZoneId.systemDefault().toString();
         zoneIDLabel.setText(displayName);
         userIDTextField.setPromptText(username);
         passwordTextField.setPromptText(password);
@@ -58,7 +66,7 @@ public class LoginViewController implements Initializable {
     }
 
     /**
-     * Login Using User ID and Password
+     * Login Using User ID and Password.
      * @author Jonathan Dowdell
      */
     @FXML

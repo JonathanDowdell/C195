@@ -22,7 +22,8 @@
                <columns>
                   <TableColumn fx:id="customerIDColumn" prefWidth="29.0" text="ID" />
                   <TableColumn fx:id="customerNameColumn" prefWidth="100.0" text="Name" />
-                  <TableColumn fx:id="customerDivisionIDColumn" prefWidth="73.0" text="Division ID" />
+                  <TableColumn fx:id="customerDivisionNameColumn" prefWidth="73.0" text="Division" />
+                  <TableColumn fx:id="customerCountryColumn" prefWidth="73.0" text="Country" />
                   <TableColumn fx:id="customerAddressColumn" prefWidth="98.0" text="Address" />
                   <TableColumn fx:id="customerPostalCodeColumn" prefWidth="75.0" text="Postal Code" />
                   <TableColumn fx:id="customerPhoneColumn" prefWidth="75.0" text="Phone" />

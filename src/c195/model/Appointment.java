@@ -211,16 +211,15 @@ public class Appointment {
             throw new InvalidAppointmentException("End Date has already pasted");
         }
 
-        final boolean hasOverlappingAppointments = AppointmentDAO.hasOverlappingAppointments(start, end, customer.getCustomerID());
-        if (hasOverlappingAppointments) {
-            throw new InvalidAppointmentException("Overlapping Appointment");
+        final long hasOverlappingAppointments = AppointmentDAO.hasOverlappingAppointments(start, end, customer.getCustomerID(), getAppointmentID());
+        if (hasOverlappingAppointments != -1) {
+            throw new InvalidAppointmentException("Appointment " + hasOverlappingAppointments + " is overlapping");
         }
 
         return true;
     }
 
     private boolean invalidTime(LocalDateTime targetLocalDateTime) {
-        System.out.println(targetLocalDateTime);
         int year = targetLocalDateTime.getYear();
         int month = targetLocalDateTime.getMonth().getValue();
         int dayOfMonth = targetLocalDateTime.getDayOfMonth();

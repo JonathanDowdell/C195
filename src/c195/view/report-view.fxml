@@ -31,12 +31,17 @@
                             <content>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
-                                        <HBox prefHeight="33.0" prefWidth="600.0" spacing="10.0">
+                                        <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="600.0" spacing="10.0">
                                             <children>
                                                 <ComboBox fx:id="typeSectionMonthComboBox" minHeight="32.0" prefWidth="150.0" promptText="Month" />
                                                 <ComboBox fx:id="typeSectionTypeComboBox" layoutX="15.0" layoutY="15.0" minHeight="32.0" prefWidth="150.0" promptText="Type" />
                                     <Button mnemonicParsing="false" onAction="#typeSectionGenerateAction" prefHeight="32.0" text="Generate" />
-                                    <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#typeResetAction" prefHeight="32.0" text="Reset" />
+                                    <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#typeClearAction" prefHeight="32.0" text="Clear" />
+                                    <Label fx:id="typeCountLoadingLabel">
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </Label>
                                             </children>
                                             <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -56,14 +61,19 @@
                                 </VBox>
                             </content>
                         </Tab>
-                        <Tab text="Appointments By Customer">
+                        <Tab text="Appointments By Contact">
                             <content>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
-                              <HBox prefHeight="33.0" prefWidth="200.0" spacing="10.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <ComboBox fx:id="appointmentCustomerComboBox" minHeight="32.0" prefWidth="150.0" promptText="Customer" />
-                                    <Button minHeight="32.0" mnemonicParsing="false" onAction="#customerAppointmentResetAction" text="Reset" />
+                                    <ComboBox fx:id="appointmentContactComboBox" minHeight="32.0" prefWidth="150.0" promptText="Contact" />
+                                    <Button minHeight="32.0" mnemonicParsing="false" onAction="#contactAppointmentClearAction" text="Clear" />
+                                    <Label fx:id="contactLoadingLabel">
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </Label>
                                  </children>
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -94,12 +104,17 @@
                             <content>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
-                                        <HBox prefHeight="33.0" prefWidth="600.0" spacing="10.0">
+                                        <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="600.0" spacing="10.0">
                                             <children>
                                                 <ComboBox fx:id="locationSectionMonthComboBox" minHeight="32.0" prefWidth="150.0" promptText="Month" />
                                                 <ComboBox fx:id="locationSectionComboBox" layoutX="15.0" layoutY="15.0" minHeight="32.0" prefWidth="150.0" promptText="Location" />
                                                 <Button mnemonicParsing="false" onAction="#locationSectionGenerateAction" prefHeight="32.0" text="Generate" />
-                                                <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#locationResetAction" prefHeight="32.0" text="Reset" />
+                                                <Button layoutX="335.0" layoutY="15.0" mnemonicParsing="false" onAction="#locationClearAction" prefHeight="32.0" text="Clear" />
+                                    <Label fx:id="locationLoadingLabel">
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </Label>
                                             </children>
                                             <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

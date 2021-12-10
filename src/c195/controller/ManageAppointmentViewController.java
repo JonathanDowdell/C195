@@ -99,7 +99,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Check if Appointment Exist within 15 minutes
+     * Check if Appointment Exist within 15 minutes.
      */
     private void checkAppointments() {
         for (final Appointment currentAppointment : appointments) {
@@ -119,7 +119,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Open Manage Appointment View
+     * Open Manage Appointment View.
      * @param event
      */
     @FXML
@@ -132,7 +132,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Open Manage Appointment View with selected Appointment
+     * Open Manage Appointment View with selected Appointment.
      * @param event
      */
     @FXML
@@ -149,7 +149,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     /**
-     * Delete Appointment using selected Appointment
+     * Delete Appointment using selected Appointment.
      * @param event
      */
     @FXML
@@ -198,6 +198,7 @@ public class ManageAppointmentViewController implements Initializable {
     }
 
     private void handleAppointmentTable() {
+        appointments.sort(Comparator.comparing(Appointment::getAppointmentID));
         appointmentTable.setItems(appointments);
         appointmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         appointmentTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -254,7 +255,7 @@ public class ManageAppointmentViewController implements Initializable {
 
     /**
      * Sorts Appointments using Lambda Expressing.
-     * Reasoning - Decreased code footprint and Increased code readability
+     * Reasoning - Decreased code footprint and Increased code readability.
      * @return Observable List of Appointments
      */
     private ObservableList<Appointment> sortAppointmentsByThisWeek() {

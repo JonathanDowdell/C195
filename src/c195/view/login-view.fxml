@@ -14,11 +14,6 @@
     <children>
         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
             <children>
-                <Label text="Zone:">
-                    <font>
-                        <Font name="System Bold" size="14.0" />
-                    </font>
-                </Label>
                 <Label fx:id="zoneIDLabel" layoutX="233.0" layoutY="10.0">
                     <font>
                         <Font name="System Bold" size="14.0" />
@@ -41,13 +36,13 @@
                 </Label>
             <VBox>
                <children>
-                  <Label text="Username" textFill="#00000091" />
+                  <Label fx:id="usernameLabel" textFill="#00000091" />
                       <TextField fx:id="userIDTextField" minHeight="32.0" onAction="#login" promptText="Username" />
                </children>
             </VBox>
             <VBox>
                <children>
-                  <Label text="Password" textFill="#00000091" />
+                  <Label fx:id="passwordLabel" textFill="#00000091" />
                   <PasswordField fx:id="passwordTextField" minHeight="32.0" onAction="#login" promptText="Password" />
                </children>
             </VBox>

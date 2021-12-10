@@ -9,18 +9,23 @@ import c195.model.Customer;
 import c195.model.FirstLevelDivision;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -74,11 +79,15 @@ public class CustomerViewController implements Initializable {
         stateProvinceComboField.getSelectionModel().select(division);
         postalCodeTextField.setText(customer.getPostalCode());
         phoneNumberTextField.setText(customer.getPhone());
+
+        ObservableList<FirstLevelDivision> firstLevelDivisions = FirstLevelDivisionDAO.getByCountryID(country.getCountryID());
+        stateProvinceComboField.setItems(firstLevelDivisions);
+
         update = true;
     }
 
     /**
-     * Save Customer
+     * Save Customer.
      * @param actionEvent
      */
     @FXML
@@ -135,7 +144,7 @@ public class CustomerViewController implements Initializable {
     }
 
     /**
-     * Navigate to Main View
+     * Navigate to Main View.
      * @param actionEvent
      */
     @FXML
@@ -193,12 +202,29 @@ public class CustomerViewController implements Initializable {
     }
 
     private void handleComboBox() {
-        countryComboField.setItems(CountryDAO.getAllCountries());
+        ObservableList<Country> allCountries = CountryDAO.getAllCountries();
+        allCountries.sort(Comparator.comparing(Country::getCountry));
+        countryComboField.setItems(allCountries);
 
         countryComboField.setOnAction(actionEvent -> {
             Country selectedCountry = countryComboField.getSelectionModel().getSelectedItem();
             ObservableList<FirstLevelDivision> firstLevelDivisions = FirstLevelDivisionDAO.getByCountryID(selectedCountry.getCountryID());
+            firstLevelDivisions.sort(Comparator.comparing(FirstLevelDivision::getDivision));
             stateProvinceComboField.setItems(firstLevelDivisions);
+            stateProvinceComboField.getSelectionModel().clearSelection();
+            stateProvinceComboField.setPromptText("State / Province");
+            stateProvinceComboField.setValue(null);
+            stateProvinceComboField.setButtonCell(new ListCell<>() {
+                @Override
+                protected void updateItem(FirstLevelDivision item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("State / Province");
+                    } else {
+                        setText(item.getDivision());
+                    }
+                }
+            });
         });
     }
 

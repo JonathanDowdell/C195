@@ -11,11 +11,13 @@ import c195.model.Customer;
 import c195.util.LocalDateTimeHelper;
 import c195.util.ModalHelper;
 import c195.util.NavigationHelper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -81,11 +83,48 @@ public class AppointmentViewController implements Initializable {
     @FXML
     public Button cancelButton;
 
-    private final ObservableList<Contact> contacts = ContactDAO.getAllContacts();
+    private ObservableList<Contact> contacts = ContactDAO.getAllContacts();
 
-    private final ObservableList<Customer> customers = CustomerDAO.getAllCustomers();
+    private ObservableList<Customer> customers = CustomerDAO.getAllCustomers();
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a");
+
+    private Callback<ListView<Customer>, ListCell<Customer>> customerCellFactory = new Callback<>() {
+
+        @Override
+        public ListCell<Customer> call(ListView<Customer> l) {
+            return new ListCell<>() {
+                @Override
+                protected void updateItem(Customer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(item.getCustomerID() + " - " + item.getCustomerName());
+                    }
+                }
+            };
+        }
+    };
+
+    private Callback<ListView<Contact>, ListCell<Contact>> contactCellFactory = new Callback<>() {
+
+        @Override
+        public ListCell<Contact> call(ListView<Contact> l) {
+            return new ListCell<>() {
+
+                @Override
+                protected void updateItem(Contact item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(item.getContactID() + " - " + item.getContactName());
+                    }
+                }
+            };
+        }
+    };
 
     /**
      * @param url
@@ -93,12 +132,19 @@ public class AppointmentViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        customerComboField.setButtonCell(customerCellFactory.call(null));
+        customerComboField.setCellFactory(customerCellFactory);
+
+        contactComboField.setButtonCell(contactCellFactory.call(null));
+        contactComboField.setCellFactory(contactCellFactory);
+
         customerComboField.setItems(customers);
         contactComboField.setItems(contacts);
         startPmAmCombo.getItems().addAll("PM", "AM");
         startPmAmCombo.getSelectionModel().select(0);
         endPmAmCombo.getItems().addAll("PM", "AM");
         endPmAmCombo.getSelectionModel().select(0);
+
 
         numbersOnlyField(startHourTimeField);
         numbersOnlyField(startMinuteTimeField);
@@ -135,7 +181,7 @@ public class AppointmentViewController implements Initializable {
 
 
             // Appointment
-            final Appointment appointment = new Appointment();
+            Appointment appointment = new Appointment();
             appointment.setTitle(titleTextField.getText());
             appointment.setDescription(descriptionTextField.getText());
             appointment.setLocation(locationTextField.getText());
@@ -183,6 +229,12 @@ public class AppointmentViewController implements Initializable {
      * @param appointment
      */
     public void loadAppointment(Appointment appointment) {
+        customerComboField.setButtonCell(customerCellFactory.call(null));
+        customerComboField.setCellFactory(customerCellFactory);
+
+        contactComboField.setButtonCell(contactCellFactory.call(null));
+        contactComboField.setCellFactory(contactCellFactory);
+
         customerComboField.getSelectionModel().select(appointment.getCustomer());
         contactComboField.getSelectionModel().select(appointment.getContact());
         idTextField.setText(String.valueOf(appointment.getAppointmentID()));
